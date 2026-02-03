@@ -89,6 +89,21 @@
             font-weight: bold;
             margin-top: 10px;
         }
+        .emergency-badge {
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        .doctor-card {
+            position: relative;
+        }
         .table-container {
             background: white;
             border-radius: 15px;
@@ -136,6 +151,9 @@
             </a>
             <a href="{% url 'doctors:table' %}" class="btn btn-outline-primary">
                 <i class="fas fa-table"></i> টেবিল ভিউ
+            </a>
+            <a href="{% url 'doctors:emergency' %}" class="btn btn-danger">
+                <i class="fas fa-ambulance"></i> 🚨 জরুরি ডাক্তার
             </a>
             <a href="{% url 'doctors:hospital_list' %}" class="btn btn-outline-success">
                 <i class="fas fa-hospital-alt"></i> হাসপাতাল

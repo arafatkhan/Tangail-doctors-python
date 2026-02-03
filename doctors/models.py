@@ -178,14 +178,45 @@ class Doctor(models.Model):
         help_text='মোট কতবার ডাক্তার প্রোফাইল দেখা হয়েছে'
     )
     
+    # Emergency Fields
+    is_emergency_available = models.BooleanField(
+        default=False,
+        verbose_name='জরুরি সেবা উপলব্ধ',
+        help_text='জরুরি প্রয়োজনে এই ডাক্তার পাওয়া যাবে কিনা'
+    )
+    is_24_7_available = models.BooleanField(
+        default=False,
+        verbose_name='২৪/৭ উপলব্ধ',
+        help_text='২৪ ঘণ্টা সেবা দেন কিনা'
+    )
+    emergency_phone = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name='জরুরি ফোন নম্বর',
+        help_text='জরুরি যোগাযোগের ফোন নম্বর (ঐচ্ছিক)'
+    )
+    emergency_note = models.TextField(
+        blank=True,
+        verbose_name='জরুরি নোট',
+        help_text='জরুরি সেবা সম্পর্কিত বিশেষ তথ্য (ঐচ্ছিক)'
+    )
+    last_emergency_update = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='শেষ আপডেট',
+        help_text='জরুরি তথ্য শেষ আপডেট হওয়ার সময়'
+    )
+    
     class Meta:
         verbose_name = 'ডাক্তার'
         verbose_name_plural = 'ডাক্তারগণ'
-        ordering = ['name']
+        ordering = ['-is_emergency_available', '-is_24_7_available', 'name']
         indexes = [
             models.Index(fields=['name']),
             models.Index(fields=['specialty']),
             models.Index(fields=['hospital']),
+            models.Index(fields=['is_emergency_available']),
+            models.Index(fields=['is_24_7_available']),
         ]
     
     def __str__(self):

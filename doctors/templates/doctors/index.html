@@ -4,6 +4,45 @@
 
 {% block content %}
 
+<!-- Emergency Doctors Section -->
+{% if emergency_doctors %}
+<div class="alert alert-danger mb-4" style="border-left: 5px solid #dc3545;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0"><i class="fas fa-ambulance me-2"></i>🚨 জরুরি ডাক্তার - এখনই পাওয়া যাবে</h5>
+        <a href="{% url 'doctors:emergency' %}" class="btn btn-sm btn-danger">
+            সব জরুরি ডাক্তার দেখুন <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+    <div class="row">
+        {% for doc in emergency_doctors %}
+        <div class="col-md-2 col-sm-4 col-6 text-center mb-3">
+            <a href="{% url 'doctors:detail' doc.pk %}" class="text-decoration-none">
+                {% if doc.image %}
+                    <img src="{{ doc.image.url }}" alt="{{ doc.name }}" class="rounded-circle" style="width:70px;height:70px;object-fit:cover;border:3px solid #dc3545;">
+                {% else %}
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width:70px;height:70px;background:#f8d7da;border:3px solid #dc3545;">
+                        <i class="fas fa-user-md" style="font-size:28px;color:#dc3545;"></i>
+                    </div>
+                {% endif %}
+                <div class="small mt-2"><strong>{{ doc.name }}</strong></div>
+                <div style="font-size:0.7rem;">
+                    {% if doc.is_emergency_available %}
+                        <span class="badge bg-danger">🚨 জরুরি</span>
+                    {% endif %}
+                    {% if doc.is_24_7_available %}
+                        <span class="badge bg-warning text-dark">🕐 ২৪/৭</span>
+                    {% endif %}
+                </div>
+                <div class="text-muted" style="font-size:0.7rem;">
+                    {{ doc.get_clean_specialty|truncatechars:20 }}
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
 <!-- Popular Doctors Section - Temporarily Removed -->
 <!-- {% if popular_doctors %}
 <div class="alert alert-info mb-4">
@@ -35,6 +74,22 @@
         {% for doctor in doctors %}
         <div class="col-md-6 col-lg-4">
             <div class="doctor-card">
+                <!-- Emergency Badges -->
+                {% if doctor.is_emergency_available or doctor.is_24_7_available %}
+                <div class="position-absolute" style="top:10px;right:10px;z-index:10;">
+                    {% if doctor.is_emergency_available %}
+                        <span class="badge bg-danger mb-1 d-block emergency-badge">
+                            🚨 জরুরি সেবা
+                        </span>
+                    {% endif %}
+                    {% if doctor.is_24_7_available %}
+                        <span class="badge bg-warning text-dark d-block">
+                            🕐 ২৪/৭ উপলব্ধ
+                        </span>
+                    {% endif %}
+                </div>
+                {% endif %}
+                
                 <!-- Doctor Image -->
                 <div class="text-center mb-2">
                     {% if doctor.image %}

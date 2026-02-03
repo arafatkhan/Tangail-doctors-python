@@ -1,0 +1,215 @@
+{% extends "doctors/base.html" %}
+
+{% block title %}🚨 জরুরি ডাক্তার - টাঙ্গাইল{% endblock %}
+
+{% block content %}
+
+<div class="text-center mb-4 p-4" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;border-radius:10px;">
+    <h1 class="display-4"><i class="fas fa-ambulance me-3"></i>🚨 জরুরি ডাক্তার</h1>
+    <p class="lead mb-0">২৪ ঘণ্টা সেবা - এখনই পাওয়া যাবে</p>
+</div>
+
+<!-- Emergency Filters -->
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-6">
+                <form method="get" class="d-flex">
+                    <input type="text" name="search" value="{{ search_query }}" 
+                           class="form-control me-2" placeholder="ডাক্তার খুঁজুন...">
+                    <input type="hidden" name="filter" value="{{ filter_type }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> খুঁজুন
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <div class="btn-group w-100" role="group">
+                    <a href="?filter=all{% if search_query %}&search={{ search_query }}{% endif %}" 
+                       class="btn {% if filter_type == 'all' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                        <i class="fas fa-ambulance"></i> সব জরুরি
+                    </a>
+                    <a href="?filter=emergency{% if search_query %}&search={{ search_query }}{% endif %}" 
+                       class="btn {% if filter_type == 'emergency' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                        🚨 জরুরি সেবা
+                    </a>
+                    <a href="?filter=24_7{% if search_query %}&search={{ search_query }}{% endif %}" 
+                       class="btn {% if filter_type == '24_7' %}btn-warning{% else %}btn-outline-warning{% endif %}">
+                        🕐 ২৪/৭ উপলব্ধ
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        {% if total_count %}
+        <div class="mt-3 text-center">
+            <div class="badge bg-info">মোট {{ total_count }} জন ডাক্তার পাওয়া গেছে</div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Emergency Instructions -->
+<div class="alert alert-info mb-4">
+    <h6><i class="fas fa-info-circle me-2"></i>জরুরি প্রয়োজনে:</h6>
+    <ul class="mb-0">
+        <li>ডাক্তারের নাম ক্লিক করে বিস্তারিত দেখুন</li>
+        <li>"এখনই কল করুন" বাটনে ক্লিক করে সরাসরি ফোন করুন</li>
+        <li>WhatsApp এর মাধ্যমেও যোগাযোগ করতে পারবেন</li>
+        <li>জীবনের ঝুঁকি থাকলে অবশ্যই 999 এ কল করে অ্যাম্বুলেন্স ডাকুন</li>
+    </ul>
+</div>
+
+<!-- Doctors List -->
+<div class="row">
+    {% if doctors %}
+        {% for doctor in doctors %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm" style="border:2px solid {% if doctor.is_emergency_available %}#dc3545{% else %}#ffc107{% endif %};">
+                <div class="card-body">
+                    <!-- Emergency Badges -->
+                    <div class="mb-3">
+                        {% if doctor.is_emergency_available %}
+                            <span class="badge bg-danger fs-6">🚨 জরুরি সেবা উপলব্ধ</span>
+                        {% endif %}
+                        {% if doctor.is_24_7_available %}
+                            <span class="badge bg-warning text-dark fs-6">🕐 ২৪/৭</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Doctor Image & Name -->
+                    <div class="text-center mb-3">
+                        {% if doctor.image %}
+                            <img src="{{ doctor.image.url }}" alt="{{ doctor.name }}" 
+                                 class="rounded-circle mb-2" 
+                                 style="width:100px;height:100px;object-fit:cover;border:3px solid {% if doctor.is_emergency_available %}#dc3545{% else %}#ffc107{% endif %};">
+                        {% else %}
+                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-2" 
+                                 style="width:100px;height:100px;background:#f0f0f0;border:3px solid {% if doctor.is_emergency_available %}#dc3545{% else %}#ffc107{% endif %};">
+                                <i class="fas fa-user-md" style="font-size:40px;color:#999;"></i>
+                            </div>
+                        {% endif %}
+                        <h5 class="card-title mb-1">{{ doctor.name }}</h5>
+                        <p class="text-muted small">{{ doctor.get_clean_specialty|truncatechars:50 }}</p>
+                    </div>
+                    
+                    <!-- Hospital Info -->
+                    <div class="mb-3">
+                        <div class="text-muted small mb-1">
+                            <i class="fas fa-hospital me-1"></i>{{ doctor.get_clean_hospital|truncatechars:40 }}
+                        </div>
+                        {% if doctor.view_count %}
+                        <div class="text-muted small">
+                            <i class="fas fa-eye me-1"></i>{{ doctor.view_count }} জন দেখেছেন
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Emergency Note -->
+                    {% if doctor.emergency_note %}
+                    <div class="alert alert-light small mb-3">
+                        <i class="fas fa-info-circle me-1"></i>{{ doctor.emergency_note|truncatechars:80 }}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2">
+                        {% if doctor.emergency_phone %}
+                        <a href="tel:{{ doctor.emergency_phone }}" class="btn btn-danger btn-lg">
+                            <i class="fas fa-phone-alt"></i> এখনই কল করুন
+                        </a>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <a href="https://wa.me/88{{ doctor.emergency_phone }}" 
+                                   target="_blank"
+                                   class="btn btn-success w-100">
+                                    <i class="fab fa-whatsapp"></i> WhatsApp
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="{% url 'doctors:detail' doctor.pk %}" 
+                                   class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-info-circle"></i> বিস্তারিত
+                                </a>
+                            </div>
+                        </div>
+                        {% elif doctor.contact %}
+                        <a href="{% url 'doctors:detail' doctor.pk %}" class="btn btn-danger btn-lg">
+                            <i class="fas fa-phone-alt"></i> যোগাযোগ করুন
+                        </a>
+                        {% else %}
+                        <a href="{% url 'doctors:detail' doctor.pk %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-info-circle"></i> বিস্তারিত দেখুন
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-warning text-center">
+                <i class="fas fa-exclamation-triangle"></i> 
+                এই মুহূর্তে কোনো জরুরি ডাক্তার উপলব্ধ নেই। অনুগ্রহ করে পরে আবার চেষ্টা করুন।
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj %}
+<nav aria-label="পেজিনেশন" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}&filter={{ filter_type }}">আগের</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">আগের</span></li>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}&filter={{ filter_type }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}&filter={{ filter_type }}">পরের</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">পরের</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+<!-- Emergency Contact Info -->
+<div class="alert alert-danger text-center mt-5">
+    <h5><i class="fas fa-exclamation-triangle me-2"></i>জরুরি নম্বর</h5>
+    <div class="row g-3 mt-2">
+        <div class="col-md-4">
+            <a href="tel:999" class="btn btn-danger btn-lg w-100">
+                <i class="fas fa-ambulance"></i> অ্যাম্বুলেন্স: 999
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="tel:102" class="btn btn-danger btn-lg w-100">
+                <i class="fas fa-hospital"></i> হাসপাতাল: 102
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="tel:100" class="btn btn-danger btn-lg w-100">
+                <i class="fas fa-shield-alt"></i> পুলিশ: 100
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

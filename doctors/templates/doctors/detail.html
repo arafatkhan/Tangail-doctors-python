@@ -28,7 +28,58 @@
             </div>
             <h2 class="doctor-name text-center mb-4">
                 {{ doctor.name }}
+                {% if doctor.is_emergency_available or doctor.is_24_7_available %}
+                <div class="mt-2">
+                    {% if doctor.is_emergency_available %}
+                        <span class="badge bg-danger fs-6 emergency-badge">🚨 জরুরি সেবা উপলব্ধ</span>
+                    {% endif %}
+                    {% if doctor.is_24_7_available %}
+                        <span class="badge bg-warning text-dark fs-6">🕐 ২৪/৭ উপলব্ধ</span>
+                    {% endif %}
+                </div>
+                {% endif %}
             </h2>
+            
+            <!-- Emergency Contact Section -->
+            {% if doctor.is_emergency_available or doctor.is_24_7_available %}
+            <div class="alert alert-danger mb-4" style="border-left:5px solid #dc3545;">
+                <h5 class="alert-heading">
+                    <i class="fas fa-ambulance me-2"></i>🚨 জরুরি যোগাযোগ
+                </h5>
+                {% if doctor.emergency_note %}
+                <p class="mb-3">{{ doctor.emergency_note }}</p>
+                {% endif %}
+                <div class="row g-2">
+                    {% if doctor.emergency_phone %}
+                        <div class="col-md-6">
+                            <a href="tel:{{ doctor.emergency_phone }}" class="btn btn-danger btn-lg w-100">
+                                <i class="fas fa-phone-alt"></i> এখনই কল করুন
+                                <div class="small">{{ doctor.emergency_phone }}</div>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="https://wa.me/88{{ doctor.emergency_phone }}" 
+                               target="_blank"
+                               class="btn btn-success btn-lg w-100">
+                                <i class="fab fa-whatsapp"></i> WhatsApp করুন
+                                <div class="small">{{ doctor.emergency_phone }}</div>
+                            </a>
+                        </div>
+                    {% elif doctor.contact %}
+                        <div class="col-12">
+                            <div class="alert alert-info mb-0">
+                                <i class="fas fa-phone"></i> <strong>যোগাযোগ:</strong> {{ doctor.get_clean_contact }}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if doctor.last_emergency_update %}
+                <div class="text-muted small mt-2">
+                    <i class="fas fa-clock me-1"></i>শেষ আপডেট: {{ doctor.last_emergency_update|date:"d M Y, h:i A" }}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
             
             <div class="row">
                 <div class="col-md-6">

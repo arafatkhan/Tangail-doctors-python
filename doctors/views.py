@@ -13,8 +13,20 @@ def index(request):
     """কার্ড ভিউ - সব ডাক্তার দেখাবে"""
     search_query = request.GET.get('search', '')
     category_filter = request.GET.get('category', '')
+    emergency_filter = request.GET.get('emergency', '')
+    available_24_7 = request.GET.get('available_24_7', '')
     
     doctors = Doctor.objects.filter(is_active=True)
+    
+    # Emergency filters
+    if emergency_filter == 'true':
+        doctors = doctors.filter(is_emergency_available=True)
+    elif emergency_filter == 'all':
+        doctors = doctors.filter(Q(is_emergency_available=True) | Q(is_24_7_available=True))
+    
+    if available_24_7 == 'true':
+        doctors = doctors.filter(is_24_7_available=True)
+    
     # সার্চ ফিল্টার
     if search_query:
         doctors = doctors.filter(
@@ -46,16 +58,27 @@ def index(request):
     
     # Get popular doctors (only on first page, no search/filter)
     popular_doctors = []
-    if not search_query and not category_filter and page_obj.number == 1:
+    if not search_query and not category_filter and not emergency_filter and not available_24_7 and page_obj.number == 1:
         popular_doctors = get_popular_doctors(limit=5, days=30)
+    
+    # Get emergency doctors for homepage section
+    emergency_doctors = []
+    if not search_query and not category_filter and not emergency_filter and page_obj.number == 1:
+        emergency_doctors = Doctor.objects.filter(
+            is_active=True,
+            is_emergency_available=True
+        ).order_by('-view_count')[:6]
     
     context = {
         'doctors': page_obj.object_list,
         'page_obj': page_obj,
         'search_query': search_query,
         'category_filter': category_filter,
+        'emergency_filter': emergency_filter,
+        'available_24_7': available_24_7,
         'categories': categories,
         'popular_doctors': popular_doctors,
+        'emergency_doctors': emergency_doctors,
     }
     return render(request, 'doctors/index.html', context)
 
@@ -511,3 +534,48 @@ def cancel_appointment(request, appointment_id):
         messages.error(request, 'এই এপয়েন্টমেন্ট বাতিল করা যাবে না')
     
     return redirect('doctors:my_appointments')
+
+
+def emergency_doctors(request):
+    """জরুরি ডাক্তারদের তালিকা"""
+    search_query = request.GET.get('search', '')
+    filter_type = request.GET.get('filter', 'all')  # all, emergency, 24_7
+    
+    # Base queryset
+    doctors = Doctor.objects.filter(is_active=True)
+    
+    # Apply emergency filters
+    if filter_type == 'emergency':
+        doctors = doctors.filter(is_emergency_available=True)
+    elif filter_type == '24_7':
+        doctors = doctors.filter(is_24_7_available=True)
+    else:  # all
+        doctors = doctors.filter(Q(is_emergency_available=True) | Q(is_24_7_available=True))
+    
+    # Search filter
+    if search_query:
+        doctors = doctors.filter(
+            Q(name__icontains=search_query) |
+            Q(specialty__icontains=search_query) |
+            Q(hospital__icontains=search_query)
+        )
+    
+    # Pagination
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    paginator = Paginator(doctors, 20)
+    page = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    
+    context = {
+        'doctors': page_obj.object_list,
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'filter_type': filter_type,
+        'total_count': doctors.count(),
+    }
+    return render(request, 'doctors/emergency.html', context)

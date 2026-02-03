@@ -3,12 +3,12 @@ from .models import Doctor, Favorite, Review, TimeSlot, Appointment, Category, C
 
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
-    list_display = ['name', 'specialty_short', 'hospital', 'get_category', 'get_categories_list', 'view_count', 'is_active', 'created_at']
-    list_filter = ['is_active', 'hospital', 'created_at', 'categories', 'primary_category']
-    search_fields = ['name', 'specialty', 'hospital', 'qualification', 'contact', 'hospital_address']
-    list_editable = ['is_active']
+    list_display = ['name', 'specialty_short', 'hospital', 'get_category', 'get_categories_list', 'is_emergency_available', 'is_24_7_available', 'view_count', 'is_active', 'created_at']
+    list_filter = ['is_active', 'is_emergency_available', 'is_24_7_available', 'hospital', 'created_at', 'categories', 'primary_category']
+    search_fields = ['name', 'specialty', 'hospital', 'qualification', 'contact', 'hospital_address', 'emergency_phone']
+    list_editable = ['is_active', 'is_emergency_available', 'is_24_7_available']
     date_hierarchy = 'created_at'
-    ordering = ['-view_count', 'hospital', '-created_at']
+    ordering = ['-is_emergency_available', '-is_24_7_available', '-view_count', 'hospital', '-created_at']
     list_per_page = 50
     filter_horizontal = ['categories']
     
@@ -22,8 +22,13 @@ class DoctorAdmin(admin.ModelAdmin):
         ('ক্যাটেগরি', {
             'fields': ('categories', 'primary_category')
         }),
-        ('অন্যান্য তথ্য', {
+        ('যোগাযোগ তথ্য', {
             'fields': ('contact', 'schedule')
+        }),
+        ('জরুরি সেবা', {
+            'fields': ('is_emergency_available', 'is_24_7_available', 'emergency_phone', 'emergency_note', 'last_emergency_update'),
+            'classes': ('collapse',),
+            'description': 'জরুরি চিকিৎসা সেবার জন্য এই তথ্য ব্যবহার করা হবে'
         }),
         ('অবস্থা', {
             'fields': ('is_active',)
