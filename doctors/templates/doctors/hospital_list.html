@@ -1,0 +1,96 @@
+{% extends "doctors/base.html" %}
+
+{% block title %}হাসপাতাল তালিকা - টাঙ্গাইল ডাক্তার তালিকা{% endblock %}
+
+{% block content %}
+<div class="alert alert-info">
+    <h4><i class="fas fa-hospital-alt"></i> হাসপাতাল ও ক্লিনিক তালিকা</h4>
+    <p>
+        {% if search_query %}
+            "{{ search_query }}" এর জন্য {{ page_obj.paginator.count }} টি হাসপাতাল পাওয়া গেছে
+        {% else %}
+            মোট হাসপাতাল/ক্লিনিক: {{ page_obj.paginator.count }}
+        {% endif %}
+    </p>
+</div>
+
+<div class="row">
+    {% if hospitals %}
+        {% for hospital in hospitals %}
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="doctor-card">
+                <h4 class="text-primary">
+                    <i class="fas fa-hospital"></i> {{ hospital.hospital }}
+                </h4>
+                
+                {% if hospital.hospital_address %}
+                <p class="text-muted small">
+                    <i class="fas fa-map-marker-alt"></i> {{ hospital.hospital_address }}
+                </p>
+                {% endif %}
+                
+                <p class="mb-3">
+                    <span class="badge bg-info">
+                        <i class="fas fa-user-md"></i> {{ hospital.doctor_count }} জন ডাক্তার
+                    </span>
+                </p>
+                
+                <a href="{% url 'doctors:hospital_doctors' hospital.hospital %}" 
+                   class="btn btn-sm btn-primary">
+                    <i class="fas fa-list"></i> ডাক্তার দেখুন
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                {% if search_query %}
+                    <i class="fas fa-info-circle"></i> "{{ search_query }}" এর জন্য কোনো হাসপাতাল খুঁজে পাওয়া যায়নি।
+                {% else %}
+                    <i class="fas fa-info-circle"></i> কোনো হাসপাতাল খুঁজে পাওয়া যায়নি।
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.paginator.num_pages > 1 %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">
+                    <i class="fas fa-angle-double-left"></i> প্রথম
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    <i class="fas fa-angle-left"></i> পূর্ববর্তী
+                </a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">
+                পৃষ্ঠা {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    পরবর্তী <i class="fas fa-angle-right"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    শেষ <i class="fas fa-angle-double-right"></i>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

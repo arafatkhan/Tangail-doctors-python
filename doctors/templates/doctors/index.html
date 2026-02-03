@@ -1,0 +1,167 @@
+{% extends "doctors/base.html" %}
+
+{% block title %}কার্ড ভিউ - টাঙ্গাইল ডাক্তার তালিকা{% endblock %}
+
+{% block content %}
+
+<!-- Popular Doctors Section - Temporarily Removed -->
+<!-- {% if popular_doctors %}
+<div class="alert alert-info mb-4">
+    <h5><i class="fas fa-star me-2"></i>জনপ্রিয় ডাক্তার (গত ৩০ দিন)</h5>
+    <div class="row">
+        {% for doc in popular_doctors %}
+        <div class="col-md-2 col-sm-4 col-6 text-center mb-2">
+            <a href="{% url 'doctors:detail' doc.pk %}" class="text-decoration-none">
+                {% if doc.image %}
+                    <img src="{{ doc.image.url }}" alt="{{ doc.name }}" class="rounded-circle" style="width:60px;height:60px;object-fit:cover;border:2px solid #ddd;">
+                {% else %}
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width:60px;height:60px;background:#f0f0f0;border:2px solid #ddd;">
+                        <i class="fas fa-user-md" style="font-size:24px;color:#999;"></i>
+                    </div>
+                {% endif %}
+                <div class="small mt-1"><strong>{{ doc.name }}</strong></div>
+                <div class="text-muted" style="font-size:0.75rem;">
+                    <i class="fas fa-eye"></i> {{ doc.view_count }} বার
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %} -->
+
+<div class="row">
+    {% if doctors %}
+        {% for doctor in doctors %}
+        <div class="col-md-6 col-lg-4">
+            <div class="doctor-card">
+                <!-- Doctor Image -->
+                <div class="text-center mb-2">
+                    {% if doctor.image %}
+                        <img src="{{ doctor.image.url }}" alt="{{ doctor.name }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;border:2px solid #eee;">
+                    {% else %}
+                        <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width:100px;height:100px;background:#f0f0f0;border:2px solid #eee;">
+                            <i class="fas fa-user-md" style="font-size:40px;color:#999;"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <h3 class="doctor-name">{{ doctor.name }}</h3>
+                
+                {% if doctor.qualification %}
+                <div class="doctor-info">
+                    <i class="fas fa-graduation-cap"></i>
+                    <strong>শিক্ষাগত যোগ্যতা:</strong> {{ doctor.qualification|safe }}
+                </div>
+                {% endif %}
+                
+                {% if doctor.get_clean_specialty %}
+                <div class="doctor-info">
+                    <i class="fas fa-stethoscope"></i>
+                    <strong>বিশেষত্ব:</strong> {{ doctor.get_clean_specialty|safe }}
+                </div>
+                {% endif %}
+                
+                {% if doctor.schedule %}
+                <div class="doctor-info">
+                    <i class="fas fa-clock"></i>
+                    <strong>সময়সূচী:</strong> {{ doctor.schedule|safe }}
+                </div>
+                {% endif %}
+                
+                {% if doctor.get_clean_hospital %}
+                <div class="doctor-info">
+                    <i class="fas fa-hospital-alt"></i>
+                    <strong>হাসপাতাল:</strong> {{ doctor.get_clean_hospital|safe }}
+                </div>
+                {% endif %}
+                
+                {% if doctor.contact %}
+                <div class="doctor-info">
+                    <i class="fas fa-phone"></i>
+                    <strong>যোগাযোগ:</strong> {{ doctor.get_clean_contact }}
+                </div>
+                {% endif %}
+                
+                {% with category=doctor.get_category %}
+                    {% if category == 'medicine' %}
+                        <span class="category-badge" style="background: #e3f2fd; color: #1976d2;">মেডিসিন</span>
+                    {% elif category == 'surgery' %}
+                        <span class="category-badge" style="background: #fce4ec; color: #c2185b;">সার্জারি</span>
+                    {% elif category == 'gynecology' %}
+                        <span class="category-badge" style="background: #f3e5f5; color: #7b1fa2;">গাইনি</span>
+                    {% elif category == 'pediatrics' %}
+                        <span class="category-badge" style="background: #fff3e0; color: #f57c00;">শিশু</span>
+                    {% elif category == 'cardiology' %}
+                        <span class="category-badge" style="background: #ffebee; color: #d32f2f;">হৃদরোগ</span>
+                    {% elif category == 'orthopedics' %}
+                        <span class="category-badge" style="background: #e0f2f1; color: #00897b;">হাড়</span>
+                    {% elif category == 'neurology' %}
+                        <span class="category-badge" style="background: #f1f8e9; color: #689f38;">নিউরো</span>
+                    {% elif category == 'dermatology' %}
+                        <span class="category-badge" style="background: #fff9c4; color: #f57f17;">চর্ম</span>
+                    {% elif category == 'ent' %}
+                        <span class="category-badge" style="background: #ede7f6; color: #512da8;">নাক-কান-গলা</span>
+                    {% elif category == 'eye' %}
+                        <span class="category-badge" style="background: #e1f5fe; color: #0277bd;">চক্ষু</span>
+                    {% elif category == 'dental' %}
+                        <span class="category-badge" style="background: #fafafa; color: #616161;">ডেন্টাল</span>
+                    {% elif category == 'psychiatry' %}
+                        <span class="category-badge" style="background: #e8eaf6; color: #3f51b5;">মানসিক</span>
+                    {% elif category == 'nephrology' %}
+                        <span class="category-badge" style="background: #e0f7fa; color: #00838f;">কিডনি</span>
+                    {% elif category == 'gastroenterology' %}
+                        <span class="category-badge" style="background: #f9fbe7; color: #827717;">পেট</span>
+                    {% elif category == 'urology' %}
+                        <span class="category-badge" style="background: #fbe9e7; color: #bf360c;">ইউরো</span>
+                    {% else %}
+                        <span class="category-badge" style="background: #eceff1; color: #455a64;">সাধারণ</span>
+                    {% endif %}
+                {% endwith %}
+                
+                <div class="mt-3">
+                    <a href="{% url 'doctors:detail' doctor.pk %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-info-circle"></i> বিস্তারিত
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle"></i> কোনো ডাক্তার খুঁজে পাওয়া যায়নি।
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj %}
+<nav aria-label="ডাক্তার পেজিনেশন">
+    <ul class="pagination justify-content-center mt-4">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}">আগের</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">আগের</span></li>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}">পরের</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">পরের</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

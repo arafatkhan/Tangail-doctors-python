@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}টাঙ্গাইল ডাক্তার তালিকা{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans Bengali', 'SolaimanLipi', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .view-toggle {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .view-toggle .btn {
+            margin: 5px;
+        }
+        .category-filter {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .doctor-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .doctor-name {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        .doctor-info {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        .doctor-info i {
+            color: #667eea;
+            width: 20px;
+        }
+        .category-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        .table {
+            margin-bottom: 0;
+        }
+        .table thead {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary {
+            background: #667eea;
+            border: none;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        footer {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            text-align: center;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-hospital"></i> টাঙ্গাইল ডাক্তার তালিকা</h1>
+            <p class="text-muted">টাঙ্গাইল জেলার সকল ডাক্তারদের তথ্য এক জায়গায়</p>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="view-toggle">
+            <a href="{% url 'doctors:index' %}" class="btn btn-primary">
+                <i class="fas fa-th"></i> কার্ড ভিউ
+            </a>
+            <a href="{% url 'doctors:table' %}" class="btn btn-outline-primary">
+                <i class="fas fa-table"></i> টেবিল ভিউ
+            </a>
+            <a href="{% url 'doctors:hospital_list' %}" class="btn btn-outline-success">
+                <i class="fas fa-hospital-alt"></i> হাসপাতাল
+            </a>            
+            {% if user.is_authenticated %}
+                <a href="{% url 'doctors:my_appointments' %}" class="btn btn-outline-info">
+                    <i class="fas fa-calendar-alt"></i> আমার এপয়েন্টমেন্ট
+                </a>
+                <a href="{% url 'doctors:profile' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-user-circle"></i> {{ user.username }}
+                </a>
+                <a href="{% url 'doctors:logout' %}" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt"></i> লগআউট
+                </a>
+            {% else %}
+                <a href="{% url 'doctors:login' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-sign-in-alt"></i> লগইন
+                </a>
+                <a href="{% url 'doctors:register' %}" class="btn btn-outline-success">
+                    <i class="fas fa-user-plus"></i> রেজিস্টার
+                </a>
+            {% endif %}        </div>
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <form method="GET" action="">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" name="search" class="form-control" 
+                               placeholder="ডাক্তারের নাম, বিশেষত্ব, হাসপাতাল সার্চ করুন..." 
+                               value="{{ search_query }}">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search"></i> সার্চ করুন
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Messages -->
+        {% if messages %}
+            <div class="container mb-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Category Filter -->
+        {% if categories %}
+        <div class="category-filter">
+            <strong>ক্যাটেগরি:</strong>
+            <div class="btn-group flex-wrap mt-2" role="group">
+                <a href="?" class="btn btn-sm btn-outline-secondary">সব</a>
+                {% for category in categories %}
+                <a href="?category={{ category.slug }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa {{ category.icon }} me-1"></i>{{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Main Content -->
+        {% block content %}{% endblock %}
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 টাঙ্গাইল ডাক্তার তালিকা। সকল স্বত্ব সংরক্ষিত।</p>
+            <p class="text-muted">মোট ডাক্তার: {{ doctors|length|default:"0" }}</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

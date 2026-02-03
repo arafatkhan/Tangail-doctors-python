@@ -1,0 +1,123 @@
+{% extends "doctors/base.html" %}
+
+{% block title %}{{ doctor.name }} - এপয়েন্টমেন্ট বুক করুন{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="doctor-card">
+            <!-- Header -->
+            <div class="text-end mb-3">
+                <a href="{% url 'doctors:detail' doctor.pk %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> ফিরে যান
+                </a>
+            </div>
+            
+            <h2 class="text-center mb-4">
+                <i class="fas fa-calendar-check"></i> এপয়েন্টমেন্ট বুক করুন
+            </h2>
+            
+            <!-- Doctor Info -->
+            <div class="alert alert-info">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        {% if doctor.image %}
+                            <img src="{{ doctor.image.url }}" alt="{{ doctor.name }}" class="rounded-circle" style="width:60px;height:60px;object-fit:cover;">
+                        {% else %}
+                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width:60px;height:60px;background:#f0f0f0;">
+                                <i class="fas fa-user-md" style="font-size:25px;color:#999;"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col">
+                        <h5 class="mb-0">{{ doctor.name }}</h5>
+                        {% if doctor.specialty %}
+                            <small class="text-muted">{{ doctor.get_clean_specialty }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Booking Form -->
+            <form method="POST">
+                {% csrf_token %}
+                
+                <h5 class="mb-3"><i class="fas fa-clock"></i> তারিখ ও সময় নির্বাচন করুন</h5>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>তারিখ:</strong> <span class="text-danger">*</span></label>
+                        <input type="date" name="appointment_date" class="form-control" min="{{ today }}" required>
+                        <small class="text-muted">আজ বা ভবিষ্যতের তারিখ নির্বাচন করুন</small>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>সময়সূচী:</strong> <span class="text-danger">*</span></label>
+                        <select name="time_slot" class="form-select" required>
+                            <option value="">সময় নির্বাচন করুন</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot.id }}">
+                                    {{ slot.get_day_of_week_display }} - {{ slot.start_time|time:"g:i A" }} থেকে {{ slot.end_time|time:"g:i A" }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        {% if not time_slots %}
+                            <small class="text-danger">কোনো সময়সূচী উপলব্ধ নেই</small>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <h5 class="mb-3"><i class="fas fa-user"></i> রোগীর তথ্য</h5>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>রোগীর নাম:</strong> <span class="text-danger">*</span></label>
+                        <input type="text" name="patient_name" class="form-control" value="{{ user.first_name }} {{ user.last_name }}" required>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <label class="form-label"><strong>বয়স:</strong> <span class="text-danger">*</span></label>
+                        <input type="number" name="patient_age" class="form-control" min="1" max="120" required>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <label class="form-label"><strong>ফোন নম্বর:</strong> <span class="text-danger">*</span></label>
+                        <input type="tel" name="patient_phone" class="form-control" pattern="[0-9]{11}" placeholder="01XXXXXXXXX" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label"><strong>সমস্যার বিবরণ:</strong> <span class="text-danger">*</span></label>
+                    <textarea name="problem_description" class="form-control" rows="4" placeholder="আপনার স্বাস্থ্য সমস্যা বিস্তারিত লিখুন..." required></textarea>
+                </div>
+                
+                <hr>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle"></i> 
+                    <strong>নোট:</strong> আপনার এপয়েন্টমেন্ট বুক হওয়ার পর ডাক্তার/অ্যাডমিন অনুমোদন করবেন। অনুমোদনের পর আপনি নিশ্চিতকরণ দেখতে পাবেন।
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg" {% if not time_slots %}disabled{% endif %}>
+                        <i class="fas fa-calendar-check"></i> এপয়েন্টমেন্ট বুক করুন
+                    </button>
+                    <a href="{% url 'doctors:detail' doctor.pk %}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-times"></i> বাতিল করুন
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-fill phone from user profile if available
+document.addEventListener('DOMContentLoaded', function() {
+    const phoneInput = document.querySelector('input[name="patient_phone"]');
+    // You can extend this to fetch user's saved phone number
+});
+</script>
+{% endblock %}

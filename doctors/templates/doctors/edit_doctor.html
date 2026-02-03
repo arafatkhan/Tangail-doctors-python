@@ -1,0 +1,82 @@
+{% extends "doctors/base.html" %}
+
+{% block title %}{{ doctor.name }} - এডিট করুন{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="doctor-card">
+            <div class="text-end mb-3">
+                <a href="{% url 'doctors:detail' doctor.pk %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> ফিরে যান
+                </a>
+            </div>
+            
+            <h2 class="text-center mb-4">
+                <i class="fas fa-edit"></i> ডাক্তারের তথ্য এডিট করুন
+            </h2>
+            
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>নাম:</strong></label>
+                        <input type="text" name="name" class="form-control" value="{{ doctor.name }}" required>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>শিক্ষাগত যোগ্যতা:</strong></label>
+                        <textarea name="qualification" class="form-control" rows="3">{{ doctor.qualification }}</textarea>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>বিশেষত্ব:</strong></label>
+                        <textarea name="specialty" class="form-control" rows="3">{{ doctor.specialty }}</textarea>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>সময়সূচী:</strong></label>
+                        <textarea name="schedule" class="form-control" rows="3">{{ doctor.schedule }}</textarea>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>হাসপাতাল/চেম্বার:</strong></label>
+                        <textarea name="hospital" class="form-control" rows="3">{{ doctor.hospital }}</textarea>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>যোগাযোগ:</strong></label>
+                        <textarea name="contact" class="form-control" rows="3">{{ doctor.contact }}</textarea>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label"><strong>ছবি আপলোড করুন:</strong></label>
+                    {% if doctor.image %}
+                        <div class="mb-2">
+                            <img src="{{ doctor.image.url }}" alt="{{ doctor.name }}" class="rounded" style="width:100px;height:100px;object-fit:cover;">
+                            <p class="text-muted small">বর্তমান ছবি</p>
+                        </div>
+                    {% endif %}
+                    <input type="file" name="image" class="form-control" accept="image/*">
+                    <small class="text-muted">নতুন ছবি নির্বাচন করতে ফাইল আপলোড করুন (ঐচ্ছিক)</small>
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> পরিবর্তন সংরক্ষণ করুন
+                    </button>
+                    <a href="{% url 'doctors:detail' doctor.pk %}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-times"></i> বাতিল করুন
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

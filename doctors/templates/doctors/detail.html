@@ -1,0 +1,286 @@
+{% extends "doctors/base.html" %}
+
+{% block title %}{{ doctor.name }} - বিস্তারিত{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="doctor-card">
+            <div class="text-end mb-3">
+                <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> ফিরে যান
+                </a>
+                {% if user.is_superuser %}
+                <a href="{% url 'doctors:edit_doctor' doctor.pk %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-edit"></i> এডিট করুন
+                </a>
+                {% endif %}
+            </div>
+            
+<div class="text-center mb-3">
+                {% if doctor.image %}
+                    <img src="{{ doctor.image.url }}" alt="{{ doctor.name }}" class="rounded-circle" style="width:120px;height:120px;object-fit:cover;border:3px solid #eee;">
+                {% else %}
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width:120px;height:120px;background:#f0f0f0;border:3px solid #eee;">
+                        <i class="fas fa-user-md" style="font-size:50px;color:#999;"></i>
+                    </div>
+                {% endif %}
+            </div>
+            <h2 class="doctor-name text-center mb-4">
+                {{ doctor.name }}
+            </h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    {% if doctor.qualification %}
+                    <div class="doctor-info mb-3">
+                        <i class="fas fa-graduation-cap"></i>
+                        <strong>শিক্ষাগত যোগ্যতা:</strong><br>
+                        <span class="ms-4">{{ doctor.qualification|safe }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if doctor.specialty %}
+                    <div class="doctor-info mb-3">
+                        <i class="fas fa-stethoscope"></i>
+                        <strong>বিশেষত্ব:</strong><br>
+                        <span class="ms-4">{{ doctor.specialty|safe }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="doctor-info mb-3">
+                        <i class="fas fa-eye"></i>
+                        <strong>প্রোফাইল দেখা হয়েছে:</strong><br>
+                        <span class="ms-4">{{ doctor.view_count }} বার</span>
+                    </div>
+                    
+                    {% if doctor.schedule %}
+                    <div class="doctor-info mb-3">
+                        <i class="fas fa-clock"></i>
+                        <strong>সময়সূচী:</strong><br>
+                        <span class="ms-4">{{ doctor.schedule|safe }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6">
+                    {% if doctor.hospital %}
+                    <div class="doctor-info mb-3">
+                        <i class="fas fa-hospital-alt"></i>
+                        <strong>হাসপাতাল/চেম্বার:</strong><br>
+                        <span class="ms-4">{{ doctor.hospital|safe }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if doctor.contact %}
+                    <div class="doctor-info mb-3">
+                        <i class="fas fa-phone"></i>
+                        <strong>যোগাযোগ:</strong><br>
+                        <span class="ms-4">{{ doctor.contact|safe }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="doctor-info mb-3">
+                        <i class="fas fa-calendar"></i>
+                        <strong>যোগ করা হয়েছে:</strong><br>
+                        <span class="ms-4">{{ doctor.created_at|date:"d M Y" }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <hr>
+            
+            <!-- Appointment Booking Button -->
+            <div class="text-center mb-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'doctors:book_appointment' doctor.id %}" class="btn btn-success btn-lg">
+                        <i class="fas fa-calendar-check"></i> এপয়েন্টমেন্ট বুক করুন
+                    </a>
+                    <a href="{% url 'doctors:my_appointments' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-list"></i> আমার এপয়েন্টমেন্ট
+                    </a>
+                {% else %}
+                    <a href="{% url 'doctors:login' %}?next={% url 'doctors:book_appointment' doctor.id %}" class="btn btn-success btn-lg">
+                        <i class="fas fa-calendar-check"></i> এপয়েন্টমেন্ট বুক করুন (লগইন করুন)
+                    </a>
+                {% endif %}
+            </div>
+            
+            <hr>
+            
+            <!-- Favorite and Review Actions -->
+            <div class="text-center mb-4">
+                {% if user.is_authenticated %}
+                    {% if is_favorited %}
+                        <a href="{% url 'doctors:remove_favorite' doctor.id %}" class="btn btn-danger">
+                            <i class="fas fa-heart"></i> ফেভারিট থেকে সরান
+                        </a>
+                    {% else %}
+                        <a href="{% url 'doctors:add_favorite' doctor.id %}" class="btn btn-outline-danger">
+                            <i class="far fa-heart"></i> ফেভারিটে যোগ করুন
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'doctors:login' %}" class="btn btn-outline-danger">
+                        <i class="far fa-heart"></i> ফেভারিটে যোগ করতে লগইন করুন
+                    </a>
+                {% endif %}
+            </div>
+            
+            <hr>
+            
+            <div class="text-center">
+                {% with category=doctor.get_category %}
+                    <strong>ক্যাটেগরি: </strong>
+                    {% if category == 'medicine' %}
+                        <span class="category-badge" style="background: #e3f2fd; color: #1976d2;">মেডিসিন</span>
+                    {% elif category == 'surgery' %}
+                        <span class="category-badge" style="background: #fce4ec; color: #c2185b;">সার্জারি</span>
+                    {% elif category == 'gynecology' %}
+                        <span class="category-badge" style="background: #f3e5f5; color: #7b1fa2;">গাইনি</span>
+                    {% elif category == 'pediatrics' %}
+                        <span class="category-badge" style="background: #fff3e0; color: #f57c00;">শিশু</span>
+                    {% elif category == 'cardiology' %}
+                        <span class="category-badge" style="background: #ffebee; color: #d32f2f;">হৃদরোগ</span>
+                    {% elif category == 'orthopedics' %}
+                        <span class="category-badge" style="background: #e0f2f1; color: #00897b;">হাড়</span>
+                    {% elif category == 'neurology' %}
+                        <span class="category-badge" style="background: #f1f8e9; color: #689f38;">নিউরো</span>
+                    {% elif category == 'dermatology' %}
+                        <span class="category-badge" style="background: #fff9c4; color: #f57f17;">চর্ম</span>
+                    {% elif category == 'ent' %}
+                        <span class="category-badge" style="background: #ede7f6; color: #512da8;">নাক-কান-গলা</span>
+                    {% elif category == 'eye' %}
+                        <span class="category-badge" style="background: #e1f5fe; color: #0277bd;">চক্ষু</span>
+                    {% elif category == 'dental' %}
+                        <span class="category-badge" style="background: #fafafa; color: #616161;">ডেন্টাল</span>
+                    {% elif category == 'psychiatry' %}
+                        <span class="category-badge" style="background: #e8eaf6; color: #3f51b5;">মানসিক</span>
+                    {% elif category == 'nephrology' %}
+                        <span class="category-badge" style="background: #e0f7fa; color: #00838f;">কিডনি</span>
+                    {% elif category == 'gastroenterology' %}
+                        <span class="category-badge" style="background: #f9fbe7; color: #827717;">পেট</span>
+                    {% elif category == 'urology' %}
+                        <span class="category-badge" style="background: #fbe9e7; color: #bf360c;">ইউরো</span>
+                    {% else %}
+                        <span class="category-badge" style="background: #eceff1; color: #455a64;">সাধারণ</span>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+        
+        <!-- Reviews Section -->
+        <div class="card shadow mt-4">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-comments"></i> রিভিউ ({{ reviews.count }})</h5>
+            </div>
+            <div class="card-body">
+                <!-- Add Review Form -->
+                {% if user.is_authenticated %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6>{{ user_review|yesno:"আপনার রিভিউ আপডেট করুন,নতুন রিভিউ দিন" }}</h6>
+                            <form method="post" action="{% url 'doctors:add_review' doctor.id %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label class="form-label">রেটিং</label>
+                                    <select name="rating" class="form-select" required {% if user_review %}value="{{ user_review.rating }}"{% endif %}>
+                                        <option value="">রেটিং নির্বাচন করুন</option>
+                                        <option value="1" {% if user_review and user_review.rating == 1 %}selected{% endif %}>⭐ 1 - খুবই খারাপ</option>
+                                        <option value="2" {% if user_review and user_review.rating == 2 %}selected{% endif %}>⭐⭐ 2 - খারাপ</option>
+                                        <option value="3" {% if user_review and user_review.rating == 3 %}selected{% endif %}>⭐⭐⭐ 3 - মোটামুটি</option>
+                                        <option value="4" {% if user_review and user_review.rating == 4 %}selected{% endif %}>⭐⭐⭐⭐ 4 - ভালো</option>
+                                        <option value="5" {% if user_review and user_review.rating == 5 %}selected{% endif %}>⭐⭐⭐⭐⭐ 5 - অসাধারণ</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">আপনার মতামত</label>
+                                    <textarea name="comment" class="form-control" rows="3" required>{% if user_review %}{{ user_review.comment }}{% endif %}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> {{ user_review|yesno:"আপডেট করুন,রিভিউ জমা দিন" }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        রিভিউ দিতে <a href="{% url 'doctors:login' %}">লগইন</a> করুন
+                    </div>
+                {% endif %}
+                
+                <!-- Display Reviews -->
+                {% if reviews %}
+                    <div class="list-group">
+                        {% for review in reviews %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">
+                                        <i class="fas fa-user-circle"></i> {{ review.user.username }}
+                                        {% if review.user == user %}
+                                            <span class="badge bg-info">আপনার রিভিউ</span>
+                                        {% endif %}
+                                    </h6>
+                                    <small>{{ review.created_at|date:"d M Y" }}</small>
+                                </div>
+                                <p class="mb-1">
+                                    <span class="badge bg-warning text-dark">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ review.rating }}/5
+                                    </span>
+                                </p>
+                                <p class="mb-0">{{ review.comment }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted">এখনও কোনো রিভিউ নেই</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .doctor-card {
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    .doctor-name {
+        color: #2c3e50;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .doctor-info {
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #007bff;
+    }
+    .doctor-info i {
+        color: #007bff;
+        margin-right: 8px;
+    }
+    .category-badge {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        display: inline-block;
+    }
+    .card {
+        border-radius: 10px;
+    }
+    .list-group-item {
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}

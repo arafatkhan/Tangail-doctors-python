@@ -1,0 +1,184 @@
+{% extends "doctors/base.html" %}
+
+{% block title %}আমার এপয়েন্টমেন্টসমূহ{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="doctor-card">
+            <h2 class="text-center mb-4">
+                <i class="fas fa-calendar-alt"></i> আমার এপয়েন্টমেন্টসমূহ
+            </h2>
+            
+            <!-- Filter Tabs -->
+            <ul class="nav nav-pills mb-4 justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link {% if status_filter == 'all' %}active{% endif %}" href="?status=all">
+                        <i class="fas fa-list"></i> সব ({{ appointments|length }})
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if status_filter == 'pending' %}active{% endif %}" href="?status=pending">
+                        <i class="fas fa-clock"></i> অপেক্ষমাণ
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if status_filter == 'confirmed' %}active{% endif %}" href="?status=confirmed">
+                        <i class="fas fa-check-circle"></i> নিশ্চিত
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if status_filter == 'cancelled' %}active{% endif %}" href="?status=cancelled">
+                        <i class="fas fa-times-circle"></i> বাতিল
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if status_filter == 'completed' %}active{% endif %}" href="?status=completed">
+                        <i class="fas fa-check-double"></i> সম্পন্ন
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- Appointments List -->
+            {% if appointments %}
+                <div class="row">
+                    {% for appointment in appointments %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 {% if appointment.status == 'confirmed' %}border-success{% elif appointment.status == 'cancelled' %}border-danger{% elif appointment.status == 'completed' %}border-info{% endif %}">
+                                <div class="card-body">
+                                    <!-- Status Badge -->
+                                    <div class="text-end">
+                                        {% if appointment.status == 'pending' %}
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fas fa-clock"></i> অপেক্ষমাণ
+                                            </span>
+                                        {% elif appointment.status == 'confirmed' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle"></i> নিশ্চিত
+                                            </span>
+                                        {% elif appointment.status == 'cancelled' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times-circle"></i> বাতিল
+                                            </span>
+                                        {% elif appointment.status == 'completed' %}
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-check-double"></i> সম্পন্ন
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Doctor Info -->
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="me-3">
+                                            {% if appointment.doctor.image %}
+                                                <img src="{{ appointment.doctor.image.url }}" alt="{{ appointment.doctor.name }}" class="rounded-circle" style="width:50px;height:50px;object-fit:cover;">
+                                            {% else %}
+                                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width:50px;height:50px;background:#f0f0f0;">
+                                                    <i class="fas fa-user-md" style="font-size:20px;color:#999;"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-0">
+                                                <a href="{% url 'doctors:detail' appointment.doctor.pk %}" class="text-decoration-none">
+                                                    {{ appointment.doctor.name }}
+                                                </a>
+                                            </h5>
+                                            <small class="text-muted">{{ appointment.doctor.get_clean_specialty|truncatewords:5 }}</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Appointment Details -->
+                                    <div class="mb-2">
+                                        <i class="fas fa-calendar text-primary"></i>
+                                        <strong>তারিখ:</strong> {{ appointment.appointment_date|date:"d M Y (l)" }}
+                                    </div>
+                                    
+                                    {% if appointment.time_slot %}
+                                        <div class="mb-2">
+                                            <i class="fas fa-clock text-primary"></i>
+                                            <strong>সময়:</strong> {{ appointment.time_slot.start_time|time:"g:i A" }} - {{ appointment.time_slot.end_time|time:"g:i A" }}
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="mb-2">
+                                        <i class="fas fa-user text-primary"></i>
+                                        <strong>রোগী:</strong> {{ appointment.patient_name }} ({{ appointment.patient_age }} বছর)
+                                    </div>
+                                    
+                                    <div class="mb-2">
+                                        <i class="fas fa-phone text-primary"></i>
+                                        <strong>ফোন:</strong> {{ appointment.patient_phone }}
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <i class="fas fa-notes-medical text-primary"></i>
+                                        <strong>সমস্যা:</strong>
+                                        <p class="mb-0 text-muted">{{ appointment.problem_description|truncatewords:15 }}</p>
+                                    </div>
+                                    
+                                    {% if appointment.admin_notes %}
+                                        <div class="alert alert-info py-2 mb-2">
+                                            <small><strong>অ্যাডমিন নোট:</strong> {{ appointment.admin_notes }}</small>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <!-- Actions -->
+                                    <div class="text-end">
+                                        {% if appointment.status == 'pending' or appointment.status == 'confirmed' %}
+                                            <a href="{% url 'doctors:cancel_appointment' appointment.id %}" class="btn btn-sm btn-danger" onclick="return confirm('এই এপয়েন্টমেন্ট বাতিল করতে চান?')">
+                                                <i class="fas fa-times"></i> বাতিল করুন
+                                            </a>
+                                        {% endif %}
+                                        <small class="text-muted d-block mt-1">
+                                            বুক করা হয়েছে: {{ appointment.created_at|date:"d M Y, g:i A" }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1&status={{ status_filter }}">প্রথম</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status_filter }}">পূর্ববর্তী</a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">পৃষ্ঠা {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status_filter }}">পরবর্তী</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&status={{ status_filter }}">শেষ</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle fa-3x mb-3"></i>
+                    <h5>কোনো এপয়েন্টমেন্ট পাওয়া যায়নি</h5>
+                    <p>আপনি এখনও কোনো এপয়েন্টমেন্ট বুক করেননি।</p>
+                    <a href="{% url 'doctors:index' %}" class="btn btn-primary">
+                        <i class="fas fa-search"></i> ডাক্তার খুঁজুন
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
