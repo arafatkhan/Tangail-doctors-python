@@ -43,9 +43,21 @@
             <!-- Emergency Contact Section -->
             {% if doctor.is_emergency_available or doctor.is_24_7_available %}
             <div class="alert alert-danger mb-4" style="border-left:5px solid #dc3545;">
-                <h5 class="alert-heading">
-                    <i class="fas fa-ambulance me-2"></i>🚨 জরুরি যোগাযোগ
-                </h5>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="alert-heading mb-0">
+                        <i class="fas fa-ambulance me-2"></i>🚨 জরুরি যোগাযোগ
+                    </h5>
+                    <!-- Real-time Availability Status (Phase 2) -->
+                    {% if doctor.is_available_now %}
+                        <span class="badge bg-success fs-6" style="animation: pulse 2s infinite;">
+                            🟢 এখন উপলব্ধ
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary fs-6">
+                            🔴 {{ doctor.get_next_available_time }}
+                        </span>
+                    {% endif %}
+                </div>
                 {% if doctor.emergency_note %}
                 <p class="mb-3">{{ doctor.emergency_note }}</p>
                 {% endif %}
@@ -78,6 +90,57 @@
                     <i class="fas fa-clock me-1"></i>শেষ আপডেট: {{ doctor.last_emergency_update|date:"d M Y, h:i A" }}
                 </div>
                 {% endif %}
+            </div>
+            {% endif %}
+            
+            <!-- Today's Emergency Schedule -->
+            {% if doctor.is_emergency_available %}
+            <div class="card border-info mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-check me-2"></i>আজকের জরুরি সময়সূচী
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if doctor.emergencyschedule_set.exists %}
+                        {% with today_schedules=doctor.emergencyschedule_set.all %}
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th width="30%">দিন</th>
+                                        <th width="35%">শুরু</th>
+                                        <th width="35%">শেষ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for schedule in today_schedules %}
+                                    <tr>
+                                        <td>
+                                            {% if schedule.day_of_week == 0 %}রবিবার
+                                            {% elif schedule.day_of_week == 1 %}সোমবার
+                                            {% elif schedule.day_of_week == 2 %}মঙ্গলবার
+                                            {% elif schedule.day_of_week == 3 %}বুধবার
+                                            {% elif schedule.day_of_week == 4 %}বৃহস্পতিবার
+                                            {% elif schedule.day_of_week == 5 %}শুক্রবার
+                                            {% elif schedule.day_of_week == 6 %}শনিবার
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ schedule.start_time|time:"h:i A" }}</td>
+                                        <td>{{ schedule.end_time|time:"h:i A" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endwith %}
+                    {% else %}
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-info-circle me-1"></i>
+                            কোনো নির্দিষ্ট জরুরি সময়সূচী নেই
+                        </p>
+                    {% endif %}
+                </div>
             </div>
             {% endif %}
             

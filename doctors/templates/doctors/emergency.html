@@ -75,6 +75,9 @@
                         {% if doctor.is_24_7_available %}
                             <span class="badge bg-warning text-dark fs-6">🕐 ২৪/৭</span>
                         {% endif %}
+                        {% if doctor.is_available_now %}
+                            <span class="badge bg-success fs-6">🟢 এখন উপলব্ধ</span>
+                        {% endif %}
                     </div>
                     
                     <!-- Doctor Image & Name -->
