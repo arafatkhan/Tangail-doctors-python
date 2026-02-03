@@ -1,9 +1,26 @@
 from django.contrib import admin
-from .models import Doctor, Favorite, Review, TimeSlot, Appointment, Category, CategoryKeyword, DoctorView, SearchQuery, DailyStats
+from .models import Doctor, Favorite, Review, TimeSlot, Appointment, Category, CategoryKeyword, DoctorView, SearchQuery, DailyStats, EmergencySchedule, DoctorLeave
+
+
+class EmergencyScheduleInline(admin.TabularInline):
+    """Doctor admin এ inline emergency schedule"""
+    model = EmergencySchedule
+    extra = 1
+    fields = ['day_of_week', 'start_time', 'end_time', 'is_emergency', 'is_active', 'notes']
+    ordering = ['day_of_week', 'start_time']
+
+
+class DoctorLeaveInline(admin.TabularInline):
+    """Doctor admin এ inline leave management"""
+    model = DoctorLeave
+    extra = 0
+    fields = ['start_date', 'end_date', 'reason', 'is_emergency_available']
+    ordering = ['-start_date']
+
 
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
-    list_display = ['name', 'specialty_short', 'hospital', 'get_category', 'get_categories_list', 'is_emergency_available', 'is_24_7_available', 'view_count', 'is_active', 'created_at']
+    list_display = ['name', 'specialty_short', 'hospital', 'get_category', 'get_categories_list', 'is_emergency_available', 'is_24_7_available', 'available_now_status', 'view_count', 'is_active', 'created_at']
     list_filter = ['is_active', 'is_emergency_available', 'is_24_7_available', 'hospital', 'created_at', 'categories', 'primary_category']
     search_fields = ['name', 'specialty', 'hospital', 'qualification', 'contact', 'hospital_address', 'emergency_phone']
     list_editable = ['is_active', 'is_emergency_available', 'is_24_7_available']
@@ -11,6 +28,7 @@ class DoctorAdmin(admin.ModelAdmin):
     ordering = ['-is_emergency_available', '-is_24_7_available', '-view_count', 'hospital', '-created_at']
     list_per_page = 50
     filter_horizontal = ['categories']
+    inlines = [EmergencyScheduleInline, DoctorLeaveInline]
     
     fieldsets = (
         ('মূল তথ্য', {
@@ -54,6 +72,14 @@ class DoctorAdmin(admin.ModelAdmin):
             return ', '.join([cat.name for cat in categories[:3]])
         return '-'
     get_categories_list.short_description = 'ক্যাটেগরিসমূহ'
+    
+    def available_now_status(self, obj):
+        """বর্তমান সময়ে উপলব্ধ কিনা (Phase 2)"""
+        if obj.is_available_now():
+            return '🟢 এখন উপলব্ধ'
+        next_time = obj.get_next_available_time()
+        return f'🔴 {next_time}'
+    available_now_status.short_description = 'বর্তমান অবস্থা'
     
     def auto_assign_categories_action(self, request, queryset):
         """Bulk action: স্বয়ংক্রিয় ক্যাটেগরি নির্ধারণ"""
@@ -274,3 +300,81 @@ class DailyStatsAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         """Don't allow manual addition - use management command"""
         return False
+
+
+@admin.register(EmergencySchedule)
+class EmergencyScheduleAdmin(admin.ModelAdmin):
+    """জরুরি সময়সূচী Admin"""
+    list_display = ['doctor', 'day_of_week_display', 'time_range', 'is_emergency', 'is_active', 'is_available_now', 'created_at']
+    list_filter = ['day_of_week', 'is_emergency', 'is_active', 'created_at']
+    search_fields = ['doctor__name', 'notes']
+    list_editable = ['is_emergency', 'is_active']
+    date_hierarchy = 'created_at'
+    ordering = ['doctor', 'day_of_week', 'start_time']
+    list_per_page = 50
+    
+    fieldsets = (
+        ('ডাক্তার তথ্য', {
+            'fields': ('doctor',)
+        }),
+        ('সময়সূচী', {
+            'fields': ('day_of_week', 'start_time', 'end_time', 'notes')
+        }),
+        ('সেটিংস', {
+            'fields': ('is_emergency', 'is_active')
+        }),
+    )
+    
+    def day_of_week_display(self, obj):
+        """সপ্তাহের দিন বাংলায়"""
+        return dict(EmergencySchedule.DAYS_OF_WEEK)[obj.day_of_week]
+    day_of_week_display.short_description = 'দিন'
+    
+    def time_range(self, obj):
+        """সময়ের রেঞ্জ"""
+        return f"{obj.start_time.strftime('%H:%M')} - {obj.end_time.strftime('%H:%M')}"
+    time_range.short_description = 'সময়'
+    
+    def is_available_now(self, obj):
+        """এখন উপলব্ধ কিনা"""
+        if obj.is_available_now():
+            return '🟢 এখন উপলব্ধ'
+        return '🔴 এখন নয়'
+    is_available_now.short_description = 'বর্তমান অবস্থা'
+
+
+@admin.register(DoctorLeave)
+class DoctorLeaveAdmin(admin.ModelAdmin):
+    """ডাক্তার ছুটি Admin"""
+    list_display = ['doctor', 'start_date', 'end_date', 'duration_days', 'is_emergency_available', 'is_on_leave_now', 'created_at']
+    list_filter = ['is_emergency_available', 'start_date', 'end_date', 'created_at']
+    search_fields = ['doctor__name', 'reason']
+    date_hierarchy = 'start_date'
+    ordering = ['-start_date']
+    list_per_page = 50
+    
+    fieldsets = (
+        ('ডাক্তার তথ্য', {
+            'fields': ('doctor',)
+        }),
+        ('ছুটির তথ্য', {
+            'fields': ('start_date', 'end_date', 'reason')
+        }),
+        ('জরুরি সেবা', {
+            'fields': ('is_emergency_available',),
+            'description': 'ছুটিতেও জরুরি সেবা পাওয়া যাবে কিনা'
+        }),
+    )
+    
+    def duration_days(self, obj):
+        """ছুটির দিন সংখ্যা"""
+        delta = obj.end_date - obj.start_date
+        return f"{delta.days + 1} দিন"
+    duration_days.short_description = 'মোট দিন'
+    
+    def is_on_leave_now(self, obj):
+        """এখন ছুটিতে আছে কিনা"""
+        if obj.is_on_leave_today():
+            return '🔴 ছুটিতে আছেন'
+        return '🟢 কর্মরত'
+    is_on_leave_now.short_description = 'বর্তমান অবস্থা'

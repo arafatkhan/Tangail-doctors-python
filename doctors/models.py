@@ -299,6 +299,100 @@ class Doctor(models.Model):
                 self.primary_category = assigned_categories[0]
                 self.save(update_fields=['primary_category'])
     
+    def is_available_now(self):
+        """বর্তমান সময়ে জরুরি সেবা উপলব্ধ কিনা চেক করে (Phase 2)"""
+        from datetime import date, datetime
+        
+        # Check if doctor has 24/7 availability flag
+        if self.is_24_7_available:
+            # Check if on leave
+            today = date.today()
+            on_leave = self.leaves.filter(
+                start_date__lte=today,
+                end_date__gte=today
+            ).first()
+            
+            if on_leave and not on_leave.is_emergency_available:
+                return False
+            return True
+        
+        # Check emergency schedules
+        if self.is_emergency_available:
+            now = datetime.now()
+            current_day = now.weekday()
+            current_time = now.time()
+            
+            # Check if on leave
+            today = date.today()
+            on_leave = self.leaves.filter(
+                start_date__lte=today,
+                end_date__gte=today
+            ).first()
+            
+            if on_leave and not on_leave.is_emergency_available:
+                return False
+            
+            # Check if any schedule matches current time
+            available_schedule = self.emergency_schedules.filter(
+                day_of_week=current_day,
+                start_time__lte=current_time,
+                end_time__gte=current_time,
+                is_active=True,
+                is_emergency=True
+            ).exists()
+            
+            return available_schedule
+        
+        return False
+    
+    def get_today_schedule(self):
+        """আজকের সময়সূচী রিটার্ন করে"""
+        from datetime import datetime
+        now = datetime.now()
+        current_day = now.weekday()
+        
+        return self.emergency_schedules.filter(
+            day_of_week=current_day,
+            is_active=True
+        ).order_by('start_time')
+    
+    def get_next_available_time(self):
+        """পরবর্তী উপলব্ধ সময় রিটার্ন করে"""
+        from datetime import datetime, timedelta
+        
+        if self.is_24_7_available:
+            return "এখনই উপলব্ধ (২৪/৭)"
+        
+        now = datetime.now()
+        current_day = now.weekday()
+        current_time = now.time()
+        
+        # Check today's remaining schedules
+        today_schedules = self.emergency_schedules.filter(
+            day_of_week=current_day,
+            start_time__gt=current_time,
+            is_active=True,
+            is_emergency=True
+        ).order_by('start_time').first()
+        
+        if today_schedules:
+            return f"আজ {today_schedules.start_time.strftime('%H:%M')} এ"
+        
+        # Check next 7 days
+        for i in range(1, 8):
+            next_day = (current_day + i) % 7
+            next_schedule = self.emergency_schedules.filter(
+                day_of_week=next_day,
+                is_active=True,
+                is_emergency=True
+            ).order_by('start_time').first()
+            
+            if next_schedule:
+                day_names = ['সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার', 'রবিবার']
+                return f"{day_names[next_day]} {next_schedule.start_time.strftime('%H:%M')} এ"
+        
+        return "সময়সূচী নেই"
+    
     image = models.ImageField(
         upload_to='doctor_images/',
         blank=True,
@@ -579,3 +673,137 @@ class DailyStats(models.Model):
     
     def __str__(self):
         return f'{self.date} - {self.total_views} ভিউ'
+
+
+class EmergencySchedule(models.Model):
+    """ডাক্তারের জরুরি সময়সূচী - সাপ্তাহিক"""
+    DAYS_OF_WEEK = [
+        (0, 'সোমবার'),
+        (1, 'মঙ্গলবার'),
+        (2, 'বুধবার'),
+        (3, 'বৃহস্পতিবার'),
+        (4, 'শুক্রবার'),
+        (5, 'শনিবার'),
+        (6, 'রবিবার'),
+    ]
+    
+    doctor = models.ForeignKey(
+        Doctor,
+        on_delete=models.CASCADE,
+        related_name='emergency_schedules',
+        verbose_name='ডাক্তার'
+    )
+    day_of_week = models.IntegerField(
+        choices=DAYS_OF_WEEK,
+        verbose_name='সপ্তাহের দিন',
+        help_text='0=সোমবার, 6=রবিবার'
+    )
+    start_time = models.TimeField(
+        verbose_name='শুরুর সময়',
+        help_text='জরুরি সেবা শুরুর সময় (24-hour format)'
+    )
+    end_time = models.TimeField(
+        verbose_name='শেষ সময়',
+        help_text='জরুরি সেবা শেষ সময় (24-hour format)'
+    )
+    is_emergency = models.BooleanField(
+        default=True,
+        verbose_name='জরুরি সেবা',
+        help_text='এই সময়ে জরুরি সেবা দেন কিনা'
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name='সক্রিয়',
+        help_text='এই সময়সূচী বর্তমানে চালু আছে কিনা'
+    )
+    notes = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='নোট',
+        help_text='অতিরিক্ত তথ্য (ঐচ্ছিক)'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='তৈরি হয়েছে'
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name='আপডেট হয়েছে'
+    )
+    
+    class Meta:
+        ordering = ['doctor', 'day_of_week', 'start_time']
+        verbose_name = 'জরুরি সময়সূচী'
+        verbose_name_plural = 'জরুরি সময়সূচীসমূহ'
+        indexes = [
+            models.Index(fields=['doctor', 'day_of_week', 'is_active']),
+            models.Index(fields=['is_active', 'is_emergency']),
+        ]
+    
+    def __str__(self):
+        day_name = dict(self.DAYS_OF_WEEK)[self.day_of_week]
+        return f'{self.doctor.name} - {day_name} ({self.start_time.strftime("%H:%M")} - {self.end_time.strftime("%H:%M")})'
+    
+    def is_available_now(self):
+        """বর্তমান সময়ে উপলব্ধ কিনা চেক করে"""
+        from datetime import datetime
+        now = datetime.now()
+        current_day = now.weekday()  # 0=Monday, 6=Sunday
+        current_time = now.time()
+        
+        return (
+            self.is_active and
+            self.is_emergency and
+            self.day_of_week == current_day and
+            self.start_time <= current_time <= self.end_time
+        )
+
+
+class DoctorLeave(models.Model):
+    """ডাক্তারের ছুটি/অনুপস্থিতি"""
+    doctor = models.ForeignKey(
+        Doctor,
+        on_delete=models.CASCADE,
+        related_name='leaves',
+        verbose_name='ডাক্তার'
+    )
+    start_date = models.DateField(
+        verbose_name='শুরুর তারিখ',
+        help_text='ছুটি শুরুর তারিখ'
+    )
+    end_date = models.DateField(
+        verbose_name='শেষ তারিখ',
+        help_text='ছুটি শেষ তারিখ'
+    )
+    reason = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='কারণ',
+        help_text='ছুটির কারণ (ঐচ্ছিক)'
+    )
+    is_emergency_available = models.BooleanField(
+        default=False,
+        verbose_name='জরুরি সেবা উপলব্ধ',
+        help_text='ছুটিতেও জরুরি সেবা দেবেন কিনা'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='তৈরি হয়েছে'
+    )
+    
+    class Meta:
+        ordering = ['-start_date']
+        verbose_name = 'ডাক্তার ছুটি'
+        verbose_name_plural = 'ডাক্তার ছুটিসমূহ'
+        indexes = [
+            models.Index(fields=['doctor', 'start_date', 'end_date']),
+        ]
+    
+    def __str__(self):
+        return f'{self.doctor.name} - {self.start_date} থেকে {self.end_date}'
+    
+    def is_on_leave_today(self):
+        """আজ ছুটিতে আছে কিনা"""
+        from datetime import date
+        today = date.today()
+        return self.start_date <= today <= self.end_date
