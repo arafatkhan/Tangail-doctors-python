@@ -11,6 +11,7 @@ class Category(models.Model):
     name_english = models.CharField('English Name', max_length=100, blank=True)
     slug = models.SlugField('স্লাগ', unique=True, max_length=150)
     description = models.TextField('বিবরণ', blank=True)
+    description_en = models.TextField('Description (English)', blank=True)
     icon = models.CharField('আইকন', max_length=50, default='fa-stethoscope', help_text='Font Awesome class (e.g., fa-heart)')
     color = models.CharField('রং', max_length=20, default='primary', help_text='Bootstrap color class')
     order = models.IntegerField('ক্রম', default=0, help_text='Display order (lower number = higher priority)')
@@ -34,6 +35,26 @@ class Category(models.Model):
     def get_doctor_count(self):
         """এই ক্যাটেগরিতে কতজন সক্রিয় ডাক্তার আছে"""
         return self.doctors.filter(is_active=True).count()
+    
+    def get_name(self, language=None):
+        """Get translated category name"""
+        from django.utils.translation import get_language
+        if language is None:
+            language = get_language()
+        
+        if language == 'en' and self.name_english:
+            return self.name_english
+        return self.name
+    
+    def get_description(self, language=None):
+        """Get translated description"""
+        from django.utils.translation import get_language
+        if language is None:
+            language = get_language()
+        
+        if language == 'en' and self.description_en:
+            return self.description_en
+        return self.description
 
 
 class CategoryKeyword(models.Model):
@@ -101,6 +122,7 @@ class Doctor(models.Model):
         ],
     }
     
+    # Bangla fields
     name = models.CharField(
         max_length=200, 
         verbose_name='নাম',
@@ -134,6 +156,41 @@ class Doctor(models.Model):
         max_length=200, 
         verbose_name='যোগাযোগ',
         help_text='ফোন নম্বর'
+    )
+    
+    # English fields
+    name_en = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='Name (English)',
+        help_text='Doctor\'s full name in English'
+    )
+    qualification_en = models.TextField(
+        blank=True,
+        verbose_name='Qualification (English)',
+        help_text='Educational qualifications in English'
+    )
+    specialty_en = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='Specialty (English)',
+        help_text='Area of specialization in English'
+    )
+    schedule_en = models.TextField(
+        blank=True,
+        verbose_name='Schedule (English)',
+        help_text='Chamber schedule in English'
+    )
+    hospital_en = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='Hospital (English)',
+        help_text='Hospital/Clinic name in English'
+    )
+    hospital_address_en = models.TextField(
+        blank=True,
+        verbose_name='Hospital Address (English)',
+        help_text='Hospital/Clinic address in English'
     )
     
     # Category relationships
@@ -200,6 +257,11 @@ class Doctor(models.Model):
         verbose_name='জরুরি নোট',
         help_text='জরুরি সেবা সম্পর্কিত বিশেষ তথ্য (ঐচ্ছিক)'
     )
+    emergency_note_en = models.TextField(
+        blank=True,
+        verbose_name='Emergency Note (English)',
+        help_text='Special information about emergency services in English (Optional)'
+    )
     last_emergency_update = models.DateTimeField(
         null=True,
         blank=True,
@@ -221,6 +283,51 @@ class Doctor(models.Model):
     
     def __str__(self):
         return self.name
+    
+    # Translation helper methods
+    def get_translated_field(self, field_name, language=None):
+        """Universal method to get translated field"""
+        from django.utils.translation import get_language
+        
+        if language is None:
+            language = get_language()
+        
+        if language == 'en':
+            en_field = f'{field_name}_en'
+            if hasattr(self, en_field):
+                value = getattr(self, en_field)
+                if value:
+                    return value
+        
+        return getattr(self, field_name, '')
+    
+    def get_name(self, language=None):
+        """Get translated name"""
+        return self.get_translated_field('name', language)
+    
+    def get_specialty(self, language=None):
+        """Get translated specialty"""
+        return self.get_translated_field('specialty', language)
+    
+    def get_qualification(self, language=None):
+        """Get translated qualification"""
+        return self.get_translated_field('qualification', language)
+    
+    def get_schedule(self, language=None):
+        """Get translated schedule"""
+        return self.get_translated_field('schedule', language)
+    
+    def get_hospital(self, language=None):
+        """Get translated hospital name"""
+        return self.get_translated_field('hospital', language)
+    
+    def get_hospital_address(self, language=None):
+        """Get translated hospital address"""
+        return self.get_translated_field('hospital_address', language)
+    
+    def get_emergency_note(self, language=None):
+        """Get translated emergency note"""
+        return self.get_translated_field('emergency_note', language)
     
     def get_clean_hospital(self):
         """Get hospital name without HTML tags"""

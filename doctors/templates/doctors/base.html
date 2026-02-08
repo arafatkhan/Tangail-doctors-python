@@ -1,9 +1,11 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="bn">
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}টাঙ্গাইল ডাক্তার তালিকা{% endblock %}</title>
+    <title>{% block title %}{% trans "টাঙ্গাইল ডাক্তার তালিকা" %}{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -140,40 +142,59 @@
     <div class="main-container">
         <!-- Header -->
         <div class="header">
-            <h1><i class="fas fa-hospital"></i> টাঙ্গাইল ডাক্তার তালিকা</h1>
-            <p class="text-muted">টাঙ্গাইল জেলার সকল ডাক্তারদের তথ্য এক জায়গায়</p>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="mb-0"><i class="fas fa-hospital"></i> {% trans "টাঙ্গাইল ডাক্তার তালিকা" %}</h1>
+                
+                <!-- Language Switcher -->
+                <div class="language-switcher">
+                    {% get_current_language as CURRENT_LANGUAGE %}
+                    <form action="{% url 'set_language' %}" method="post" id="lang-form" style="display:inline;">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.path }}" />
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-sm {% if CURRENT_LANGUAGE == 'bn' %}btn-primary{% else %}btn-outline-primary{% endif %}" onclick="setLanguage('bn')">
+                                🇧🇩 বাংলা
+                            </button>
+                            <button type="button" class="btn btn-sm {% if CURRENT_LANGUAGE == 'en' %}btn-primary{% else %}btn-outline-primary{% endif %}" onclick="setLanguage('en')">
+                                🇬🇧 English
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <p class="text-muted">{% trans "টাঙ্গাইল জেলার সকল ডাক্তারদের তথ্য এক জায়গায়" %}</p>
         </div>
 
         <!-- View Toggle -->
         <div class="view-toggle">
             <a href="{% url 'doctors:index' %}" class="btn btn-primary">
-                <i class="fas fa-th"></i> কার্ড ভিউ
+                <i class="fas fa-th"></i> {% trans "কার্ড ভিউ" %}
             </a>
             <a href="{% url 'doctors:table' %}" class="btn btn-outline-primary">
-                <i class="fas fa-table"></i> টেবিল ভিউ
+                <i class="fas fa-table"></i> {% trans "টেবিল ভিউ" %}
             </a>
             <a href="{% url 'doctors:emergency' %}" class="btn btn-danger">
-                <i class="fas fa-ambulance"></i> 🚨 জরুরি ডাক্তার
+                <i class="fas fa-ambulance"></i> 🚨 {% trans "জরুরি ডাক্তার" %}
             </a>
             <a href="{% url 'doctors:hospital_list' %}" class="btn btn-outline-success">
-                <i class="fas fa-hospital-alt"></i> হাসপাতাল
+                <i class="fas fa-hospital-alt"></i> {% trans "হাসপাতাল" %}
             </a>            
             {% if user.is_authenticated %}
                 <a href="{% url 'doctors:my_appointments' %}" class="btn btn-outline-info">
-                    <i class="fas fa-calendar-alt"></i> আমার এপয়েন্টমেন্ট
+                    <i class="fas fa-calendar-alt"></i> {% trans "আমার এপয়েন্টমেন্ট" %}
                 </a>
                 <a href="{% url 'doctors:profile' %}" class="btn btn-outline-secondary">
                     <i class="fas fa-user-circle"></i> {{ user.username }}
                 </a>
                 <a href="{% url 'doctors:logout' %}" class="btn btn-outline-danger">
-                    <i class="fas fa-sign-out-alt"></i> লগআউট
+                    <i class="fas fa-sign-out-alt"></i> {% trans "লগআউট" %}
                 </a>
             {% else %}
                 <a href="{% url 'doctors:login' %}" class="btn btn-outline-primary">
-                    <i class="fas fa-sign-in-alt"></i> লগইন
+                    <i class="fas fa-sign-in-alt"></i> {% trans "লগইন" %}
                 </a>
                 <a href="{% url 'doctors:register' %}" class="btn btn-outline-success">
-                    <i class="fas fa-user-plus"></i> রেজিস্টার
+                    <i class="fas fa-user-plus"></i> {% trans "রেজিস্টার" %}
                 </a>
             {% endif %}        </div>
 
@@ -183,12 +204,12 @@
                 <div class="row">
                     <div class="col-md-8">
                         <input type="text" name="search" class="form-control" 
-                               placeholder="ডাক্তারের নাম, বিশেষত্ব, হাসপাতাল সার্চ করুন..." 
+                               placeholder="{% trans 'ডাক্তারের নাম, বিশেষত্ব, হাসপাতাল সার্চ করুন...' %}" 
                                value="{{ search_query }}">
                     </div>
                     <div class="col-md-4">
                         <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-search"></i> সার্চ করুন
+                            <i class="fas fa-search"></i> {% trans "সার্চ করুন" %}
                         </button>
                     </div>
                 </div>
@@ -210,12 +231,12 @@
         <!-- Category Filter -->
         {% if categories %}
         <div class="category-filter">
-            <strong>ক্যাটেগরি:</strong>
+            <strong>{% trans "ক্যাটেগরি" %}:</strong>
             <div class="btn-group flex-wrap mt-2" role="group">
-                <a href="?" class="btn btn-sm btn-outline-secondary">সব</a>
+                <a href="?" class="btn btn-sm btn-outline-secondary">{% trans "সব" %}</a>
                 {% for category in categories %}
                 <a href="?category={{ category.slug }}" class="btn btn-sm btn-outline-secondary">
-                    <i class="fa {{ category.icon }} me-1"></i>{{ category.name }}
+                    <i class="fa {{ category.icon }} me-1"></i>{{ category.get_name }}
                 </a>
                 {% endfor %}
             </div>
@@ -227,12 +248,23 @@
 
         <!-- Footer -->
         <footer>
-            <p>&copy; 2025 টাঙ্গাইল ডাক্তার তালিকা। সকল স্বত্ব সংরক্ষিত।</p>
-            <p class="text-muted">মোট ডাক্তার: {{ doctors|length|default:"0" }}</p>
+            <p>&copy; 2025 {% trans "টাঙ্গাইল ডাক্তার তালিকা। সকল স্বত্ব সংরক্ষিত।" %}</p>
+            <p class="text-muted">{% trans "মোট ডাক্তার" %}: {{ doctors|length|default:"0" }}</p>
         </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function setLanguage(lang) {
+            const form = document.getElementById('lang-form');
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'language';
+            input.value = lang;
+            form.appendChild(input);
+            form.submit();
+        }
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

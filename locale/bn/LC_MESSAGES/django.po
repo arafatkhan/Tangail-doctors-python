@@ -1,0 +1,161 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tangail Doctors\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-07 15:30+0600\n"
+"PO-Revision-Date: 2026-02-07 15:30+0600\n"
+"Last-Translator: \n"
+"Language-Team: Bengali\n"
+"Language: bn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# All Bengali texts remain as is (no translation needed for default language)
+msgid "টাঙ্গাইল ডাক্তার তালিকা"
+msgstr "টাঙ্গাইল ডাক্তার তালিকা"
+
+msgid "টাঙ্গাইল জেলার সকল ডাক্তারদের তথ্য এক জায়গায়"
+msgstr "টাঙ্গাইল জেলার সকল ডাক্তারদের তথ্য এক জায়গায়"
+
+msgid "কার্ড ভিউ"
+msgstr "কার্ড ভিউ"
+
+msgid "টেবিল ভিউ"
+msgstr "টেবিল ভিউ"
+
+msgid "জরুরি ডাক্তার"
+msgstr "জরুরি ডাক্তার"
+
+msgid "হাসপাতাল"
+msgstr "হাসপাতাল"
+
+msgid "আমার এপয়েন্টমেন্ট"
+msgstr "আমার এপয়েন্টমেন্ট"
+
+msgid "লগআউট"
+msgstr "লগআউট"
+
+msgid "লগইন"
+msgstr "লগইন"
+
+msgid "রেজিস্টার"
+msgstr "রেজিস্টার"
+
+msgid "ডাক্তারের নাম, বিশেষত্ব, হাসপাতাল সার্চ করুন..."
+msgstr "ডাক্তারের নাম, বিশেষত্ব, হাসপাতাল সার্চ করুন..."
+
+msgid "সার্চ করুন"
+msgstr "সার্চ করুন"
+
+msgid "ক্যাটেগরি"
+msgstr "ক্যাটেগরি"
+
+msgid "সব"
+msgstr "সব"
+
+msgid "শিক্ষাগত যোগ্যতা"
+msgstr "শিক্ষাগত যোগ্যতা"
+
+msgid "বিশেষত্ব"
+msgstr "বিশেষত্ব"
+
+msgid "সময়সূচী"
+msgstr "সময়সূচী"
+
+msgid "যোগাযোগ"
+msgstr "যোগাযোগ"
+
+msgid "বিস্তারিত"
+msgstr "বিস্তারিত"
+
+msgid "জরুরি ডাক্তার - এখনই পাওয়া যাবে"
+msgstr "জরুরি ডাক্তার - এখনই পাওয়া যাবে"
+
+msgid "সব জরুরি ডাক্তার দেখুন"
+msgstr "সব জরুরি ডাক্তার দেখুন"
+
+msgid "জরুরি"
+msgstr "জরুরি"
+
+msgid "২৪/৭"
+msgstr "২৪/৭"
+
+msgid "জরুরি সেবা"
+msgstr "জরুরি সেবা"
+
+msgid "২৪/৭ উপলব্ধ"
+msgstr "২৪/৭ উপলব্ধ"
+
+msgid "এখন উপলব্ধ"
+msgstr "এখন উপলব্ধ"
+
+msgid "কোনো ডাক্তার খুঁজে পাওয়া যায়নি।"
+msgstr "কোনো ডাক্তার খুঁজে পাওয়া যায়নি।"
+
+msgid "ডাক্তার পেজিনেশন"
+msgstr "ডাক্তার পেজিনেশন"
+
+msgid "আগের"
+msgstr "আগের"
+
+msgid "পরের"
+msgstr "পরের"
+
+msgid "টাঙ্গাইল ডাক্তার তালিকা। সকল স্বত্ব সংরক্ষিত।"
+msgstr "টাঙ্গাইল ডাক্তার তালিকা। সকল স্বত্ব সংরক্ষিত।"
+
+msgid "মোট ডাক্তার"
+msgstr "মোট ডাক্তার"
+
+msgid "বাংলা"
+msgstr "বাংলা"
+
+msgid "English"
+msgstr "English"
+
+msgid "ফিরে যান"
+msgstr "ফিরে যান"
+
+msgid "এডিট করুন"
+msgstr "এডিট করুন"
+
+msgid "জরুরি সেবা উপলব্ধ"
+msgstr "জরুরি সেবা উপলব্ধ"
+
+msgid "জরুরি যোগাযোগ"
+msgstr "জরুরি যোগাযোগ"
+
+msgid "২৪ ঘণ্টা সেবা - এখনই পাওয়া যাবে"
+msgstr "২৪ ঘণ্টা সেবা - এখনই পাওয়া যাবে"
+
+msgid "ডাক্তার খুঁজুন..."
+msgstr "ডাক্তার খুঁজুন..."
+
+msgid "খুঁজুন"
+msgstr "খুঁজুন"
+
+msgid "সব জরুরি"
+msgstr "সব জরুরি"
+
+msgid "জরুরি প্রয়োজনে"
+msgstr "জরুরি প্রয়োজনে"
+
+msgid "ডাক্তারের নাম ক্লিক করে বিস্তারিত দেখুন"
+msgstr "ডাক্তারের নাম ক্লিক করে বিস্তারিত দেখুন"
+
+msgid "\"এখনই কল করুন\" বাটনে ক্লিক করে সরাসরি ফোন করুন"
+msgstr "\"এখনই কল করুন\" বাটনে ক্লিক করে সরাসরি ফোন করুন"
+
+msgid "WhatsApp এর মাধ্যমেও যোগাযোগ করতে পারবেন"
+msgstr "WhatsApp এর মাধ্যমেও যোগাযোগ করতে পারবেন"
+
+msgid "জীবনের ঝুঁকি থাকলে অবশ্যই 999 এ কল করে অ্যাম্বুলেন্স ডাকুন"
+msgstr "জীবনের ঝুঁকি থাকলে অবশ্যই 999 এ কল করে অ্যাম্বুলেন্স ডাকুন"
+

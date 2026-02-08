@@ -1,6 +1,7 @@
 {% extends "doctors/base.html" %}
+{% load i18n %}
 
-{% block title %}কার্ড ভিউ - টাঙ্গাইল ডাক্তার তালিকা{% endblock %}
+{% block title %}{% trans "কার্ড ভিউ" %} - {% trans "টাঙ্গাইল ডাক্তার তালিকা" %}{% endblock %}
 
 {% block content %}
 
@@ -8,9 +9,9 @@
 {% if emergency_doctors %}
 <div class="alert alert-danger mb-4" style="border-left: 5px solid #dc3545;">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0"><i class="fas fa-ambulance me-2"></i>🚨 জরুরি ডাক্তার - এখনই পাওয়া যাবে</h5>
+        <h5 class="mb-0"><i class="fas fa-ambulance me-2"></i>🚨 {% trans "জরুরি ডাক্তার - এখনই পাওয়া যাবে" %}</h5>
         <a href="{% url 'doctors:emergency' %}" class="btn btn-sm btn-danger">
-            সব জরুরি ডাক্তার দেখুন <i class="fas fa-arrow-right"></i>
+            {% trans "সব জরুরি ডাক্তার দেখুন" %} <i class="fas fa-arrow-right"></i>
         </a>
     </div>
     <div class="row">
@@ -18,19 +19,19 @@
         <div class="col-md-2 col-sm-4 col-6 text-center mb-3">
             <a href="{% url 'doctors:detail' doc.pk %}" class="text-decoration-none">
                 {% if doc.image %}
-                    <img src="{{ doc.image.url }}" alt="{{ doc.name }}" class="rounded-circle" style="width:70px;height:70px;object-fit:cover;border:3px solid #dc3545;">
+                    <img src="{{ doc.image.url }}" alt="{{ doc.get_name }}" class="rounded-circle" style="width:70px;height:70px;object-fit:cover;border:3px solid #dc3545;">
                 {% else %}
                     <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width:70px;height:70px;background:#f8d7da;border:3px solid #dc3545;">
                         <i class="fas fa-user-md" style="font-size:28px;color:#dc3545;"></i>
                     </div>
                 {% endif %}
-                <div class="small mt-2"><strong>{{ doc.name }}</strong></div>
+                <div class="small mt-2"><strong>{{ doc.get_name }}</strong></div>
                 <div style="font-size:0.7rem;">
                     {% if doc.is_emergency_available %}
-                        <span class="badge bg-danger">🚨 জরুরি</span>
+                        <span class="badge bg-danger">🚨 {% trans "জরুরি" %}</span>
                     {% endif %}
                     {% if doc.is_24_7_available %}
-                        <span class="badge bg-warning text-dark">🕐 ২৪/৭</span>
+                        <span class="badge bg-warning text-dark">🕐 {% trans "২৪/৭" %}</span>
                     {% endif %}
                 </div>
                 <div class="text-muted" style="font-size:0.7rem;">
@@ -79,18 +80,18 @@
                 <div class="position-absolute" style="top:10px;right:10px;z-index:10;">
                     {% if doctor.is_emergency_available %}
                         <span class="badge bg-danger mb-1 d-block emergency-badge">
-                            🚨 জরুরি সেবা
+                            🚨 {% trans "জরুরি সেবা" %}
                         </span>
                     {% endif %}
                     {% if doctor.is_24_7_available %}
                         <span class="badge bg-warning text-dark d-block">
-                            🕐 ২৪/৭ উপলব্ধ
+                            🕐 {% trans "২৪/৭ উপলব্ধ" %}
                         </span>
                     {% endif %}
                     <!-- Real-time Availability Status (Phase 2) -->
                     {% if doctor.is_available_now %}
                         <span class="badge bg-success mb-1 d-block" style="animation: pulse 2s infinite;">
-                            🟢 এখন উপলব্ধ
+                            🟢 {% trans "এখন উপলব্ধ" %}
                         </span>
                     {% endif %}
                 </div>
@@ -99,47 +100,47 @@
                 <!-- Doctor Image -->
                 <div class="text-center mb-2">
                     {% if doctor.image %}
-                        <img src="{{ doctor.image.url }}" alt="{{ doctor.name }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;border:2px solid #eee;">
+                        <img src="{{ doctor.image.url }}" alt="{{ doctor.get_name }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;border:2px solid #eee;">
                     {% else %}
                         <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width:100px;height:100px;background:#f0f0f0;border:2px solid #eee;">
                             <i class="fas fa-user-md" style="font-size:40px;color:#999;"></i>
                         </div>
                     {% endif %}
                 </div>
-                <h3 class="doctor-name">{{ doctor.name }}</h3>
+                <h3 class="doctor-name">{{ doctor.get_name }}</h3>
                 
-                {% if doctor.qualification %}
+                {% if doctor.get_qualification %}
                 <div class="doctor-info">
                     <i class="fas fa-graduation-cap"></i>
-                    <strong>শিক্ষাগত যোগ্যতা:</strong> {{ doctor.qualification|safe }}
+                    <strong>{% trans "শিক্ষাগত যোগ্যতা" %}:</strong> {{ doctor.get_qualification|safe }}
                 </div>
                 {% endif %}
                 
                 {% if doctor.get_clean_specialty %}
                 <div class="doctor-info">
                     <i class="fas fa-stethoscope"></i>
-                    <strong>বিশেষত্ব:</strong> {{ doctor.get_clean_specialty|safe }}
+                    <strong>{% trans "বিশেষত্ব" %}:</strong> {{ doctor.get_clean_specialty|safe }}
                 </div>
                 {% endif %}
                 
-                {% if doctor.schedule %}
+                {% if doctor.get_schedule %}
                 <div class="doctor-info">
                     <i class="fas fa-clock"></i>
-                    <strong>সময়সূচী:</strong> {{ doctor.schedule|safe }}
+                    <strong>{% trans "সময়সূচী" %}:</strong> {{ doctor.get_schedule|safe }}
                 </div>
                 {% endif %}
                 
                 {% if doctor.get_clean_hospital %}
                 <div class="doctor-info">
                     <i class="fas fa-hospital-alt"></i>
-                    <strong>হাসপাতাল:</strong> {{ doctor.get_clean_hospital|safe }}
+                    <strong>{% trans "হাসপাতাল" %}:</strong> {{ doctor.get_clean_hospital|safe }}
                 </div>
                 {% endif %}
                 
                 {% if doctor.contact %}
                 <div class="doctor-info">
                     <i class="fas fa-phone"></i>
-                    <strong>যোগাযোগ:</strong> {{ doctor.get_clean_contact }}
+                    <strong>{% trans "যোগাযোগ" %}:</strong> {{ doctor.get_clean_contact }}
                 </div>
                 {% endif %}
                 
@@ -181,7 +182,7 @@
                 
                 <div class="mt-3">
                     <a href="{% url 'doctors:detail' doctor.pk %}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-info-circle"></i> বিস্তারিত
+                        <i class="fas fa-info-circle"></i> {% trans "বিস্তারিত" %}
                     </a>
                 </div>
             </div>
@@ -190,7 +191,7 @@
     {% else %}
         <div class="col-12">
             <div class="alert alert-info text-center">
-                <i class="fas fa-info-circle"></i> কোনো ডাক্তার খুঁজে পাওয়া যায়নি।
+                <i class="fas fa-info-circle"></i> {% trans "কোনো ডাক্তার খুঁজে পাওয়া যায়নি।" %}
             </div>
         </div>
     {% endif %}
@@ -198,14 +199,14 @@
 
 <!-- Pagination -->
 {% if page_obj %}
-<nav aria-label="ডাক্তার পেজিনেশন">
+<nav aria-label="{% trans 'ডাক্তার পেজিনেশন' %}">
     <ul class="pagination justify-content-center mt-4">
         {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}">আগের</a>
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}">{% trans "আগের" %}</a>
             </li>
         {% else %}
-            <li class="page-item disabled"><span class="page-link">আগের</span></li>
+            <li class="page-item disabled"><span class="page-link">{% trans "আগের" %}</span></li>
         {% endif %}
         {% for num in page_obj.paginator.page_range %}
             {% if page_obj.number == num %}
@@ -216,10 +217,10 @@
         {% endfor %}
         {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}">পরের</a>
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}">{% trans "পরের" %}</a>
             </li>
         {% else %}
-            <li class="page-item disabled"><span class="page-link">পরের</span></li>
+            <li class="page-item disabled"><span class="page-link">{% trans "পরের" %}</span></li>
         {% endif %}
     </ul>
 </nav>

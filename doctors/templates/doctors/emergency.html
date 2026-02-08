@@ -1,12 +1,13 @@
 {% extends "doctors/base.html" %}
+{% load i18n %}
 
-{% block title %}🚨 জরুরি ডাক্তার - টাঙ্গাইল{% endblock %}
+{% block title %}🚨 {% trans "জরুরি ডাক্তার" %} - {% trans "টাঙ্গাইল ডাক্তার তালিকা" %}{% endblock %}
 
 {% block content %}
 
 <div class="text-center mb-4 p-4" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;border-radius:10px;">
-    <h1 class="display-4"><i class="fas fa-ambulance me-3"></i>🚨 জরুরি ডাক্তার</h1>
-    <p class="lead mb-0">২৪ ঘণ্টা সেবা - এখনই পাওয়া যাবে</p>
+    <h1 class="display-4"><i class="fas fa-ambulance me-3"></i>🚨 {% trans "জরুরি ডাক্তার" %}</h1>
+    <p class="lead mb-0">{% trans "২৪ ঘণ্টা সেবা - এখনই পাওয়া যাবে" %}</p>
 </div>
 
 <!-- Emergency Filters -->
@@ -16,10 +17,10 @@
             <div class="col-md-6">
                 <form method="get" class="d-flex">
                     <input type="text" name="search" value="{{ search_query }}" 
-                           class="form-control me-2" placeholder="ডাক্তার খুঁজুন...">
+                           class="form-control me-2" placeholder="{% trans 'ডাক্তার খুঁজুন...' %}">
                     <input type="hidden" name="filter" value="{{ filter_type }}">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i> খুঁজুন
+                        <i class="fas fa-search"></i> {% trans "খুঁজুন" %}
                     </button>
                 </form>
             </div>
@@ -27,15 +28,15 @@
                 <div class="btn-group w-100" role="group">
                     <a href="?filter=all{% if search_query %}&search={{ search_query }}{% endif %}" 
                        class="btn {% if filter_type == 'all' %}btn-danger{% else %}btn-outline-danger{% endif %}">
-                        <i class="fas fa-ambulance"></i> সব জরুরি
+                        <i class="fas fa-ambulance"></i> {% trans "সব জরুরি" %}
                     </a>
                     <a href="?filter=emergency{% if search_query %}&search={{ search_query }}{% endif %}" 
                        class="btn {% if filter_type == 'emergency' %}btn-danger{% else %}btn-outline-danger{% endif %}">
-                        🚨 জরুরি সেবা
+                        🚨 {% trans "জরুরি সেবা" %}
                     </a>
                     <a href="?filter=24_7{% if search_query %}&search={{ search_query }}{% endif %}" 
                        class="btn {% if filter_type == '24_7' %}btn-warning{% else %}btn-outline-warning{% endif %}">
-                        🕐 ২৪/৭ উপলব্ধ
+                        🕐 {% trans "২৪/৭ উপলব্ধ" %}
                     </a>
                 </div>
             </div>
@@ -43,7 +44,7 @@
         
         {% if total_count %}
         <div class="mt-3 text-center">
-            <div class="badge bg-info">মোট {{ total_count }} জন ডাক্তার পাওয়া গেছে</div>
+            <div class="badge bg-info">{% blocktrans with count=total_count %}মোট {{ count }} জন ডাক্তার পাওয়া গেছে{% endblocktrans %}</div>
         </div>
         {% endif %}
     </div>
@@ -51,12 +52,12 @@
 
 <!-- Emergency Instructions -->
 <div class="alert alert-info mb-4">
-    <h6><i class="fas fa-info-circle me-2"></i>জরুরি প্রয়োজনে:</h6>
+    <h6><i class="fas fa-info-circle me-2"></i>{% trans "জরুরি প্রয়োজনে" %}:</h6>
     <ul class="mb-0">
-        <li>ডাক্তারের নাম ক্লিক করে বিস্তারিত দেখুন</li>
-        <li>"এখনই কল করুন" বাটনে ক্লিক করে সরাসরি ফোন করুন</li>
-        <li>WhatsApp এর মাধ্যমেও যোগাযোগ করতে পারবেন</li>
-        <li>জীবনের ঝুঁকি থাকলে অবশ্যই 999 এ কল করে অ্যাম্বুলেন্স ডাকুন</li>
+        <li>{% trans "ডাক্তারের নাম ক্লিক করে বিস্তারিত দেখুন" %}</li>
+        <li>{% trans '"এখনই কল করুন" বাটনে ক্লিক করে সরাসরি ফোন করুন' %}</li>
+        <li>{% trans "WhatsApp এর মাধ্যমেও যোগাযোগ করতে পারবেন" %}</li>
+        <li>{% trans "জীবনের ঝুঁকি থাকলে অবশ্যই 999 এ কল করে অ্যাম্বুলেন্স ডাকুন" %}</li>
     </ul>
 </div>
 

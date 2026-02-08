@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # Multi-language support
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -104,11 +105,25 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'bn'  # Bengali
+from django.utils.translation import gettext_lazy as _
+
+LANGUAGE_CODE = 'bn'  # Default language - Bengali
+
+# Available languages
+LANGUAGES = [
+    ('bn', _('বাংলা')),
+    ('en', _('English')),
+]
+
+# Locale paths for translation files
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 TIME_ZONE = 'Asia/Dhaka'
 
-USE_I18N = True
+USE_I18N = True  # Enable internationalization
+USE_L10N = True  # Enable localization
 
 USE_TZ = True
 

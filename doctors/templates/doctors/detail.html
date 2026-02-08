@@ -1,6 +1,7 @@
 {% extends "doctors/base.html" %}
+{% load i18n %}
 
-{% block title %}{{ doctor.name }} - বিস্তারিত{% endblock %}
+{% block title %}{{ doctor.get_name }} - {% trans "বিস্তারিত" %}{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -8,11 +9,11 @@
         <div class="doctor-card">
             <div class="text-end mb-3">
                 <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-arrow-left"></i> ফিরে যান
+                    <i class="fas fa-arrow-left"></i> {% trans "ফিরে যান" %}
                 </a>
                 {% if user.is_superuser %}
                 <a href="{% url 'doctors:edit_doctor' doctor.pk %}" class="btn btn-sm btn-primary">
-                    <i class="fas fa-edit"></i> এডিট করুন
+                    <i class="fas fa-edit"></i> {% trans "এডিট করুন" %}
                 </a>
                 {% endif %}
             </div>
@@ -27,14 +28,14 @@
                 {% endif %}
             </div>
             <h2 class="doctor-name text-center mb-4">
-                {{ doctor.name }}
+                {{ doctor.get_name }}
                 {% if doctor.is_emergency_available or doctor.is_24_7_available %}
                 <div class="mt-2">
                     {% if doctor.is_emergency_available %}
-                        <span class="badge bg-danger fs-6 emergency-badge">🚨 জরুরি সেবা উপলব্ধ</span>
+                        <span class="badge bg-danger fs-6 emergency-badge">🚨 {% trans "জরুরি সেবা উপলব্ধ" %}</span>
                     {% endif %}
                     {% if doctor.is_24_7_available %}
-                        <span class="badge bg-warning text-dark fs-6">🕐 ২৪/৭ উপলব্ধ</span>
+                        <span class="badge bg-warning text-dark fs-6">🕐 {% trans "২৪/৭ উপলব্ধ" %}</span>
                     {% endif %}
                 </div>
                 {% endif %}
@@ -45,12 +46,12 @@
             <div class="alert alert-danger mb-4" style="border-left:5px solid #dc3545;">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h5 class="alert-heading mb-0">
-                        <i class="fas fa-ambulance me-2"></i>🚨 জরুরি যোগাযোগ
+                        <i class="fas fa-ambulance me-2"></i>🚨 {% trans "জরুরি যোগাযোগ" %}
                     </h5>
                     <!-- Real-time Availability Status (Phase 2) -->
                     {% if doctor.is_available_now %}
                         <span class="badge bg-success fs-6" style="animation: pulse 2s infinite;">
-                            🟢 এখন উপলব্ধ
+                            🟢 {% trans "এখন উপলব্ধ" %}
                         </span>
                     {% else %}
                         <span class="badge bg-secondary fs-6">
@@ -58,8 +59,8 @@
                         </span>
                     {% endif %}
                 </div>
-                {% if doctor.emergency_note %}
-                <p class="mb-3">{{ doctor.emergency_note }}</p>
+                {% if doctor.get_emergency_note %}
+                <p class="mb-3">{{ doctor.get_emergency_note }}</p>
                 {% endif %}
                 <div class="row g-2">
                     {% if doctor.emergency_phone %}

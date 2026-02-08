@@ -1,0 +1,468 @@
+{
+  "clinic_name": "Medinova Medical Services Ltd",
+  "contact": {
+    "phone": ["01921-232302", "01921-232303"],
+    "address": "Dhaka, Bangladesh"
+  },
+  "test_categories": [
+    {
+      "category": "HEMATOLOGY",
+      "tests": [
+        {"id": "01", "name": "CBC (Complete Blood Count)", "price": 300},
+        {"id": "02", "name": "TC, DC", "price": 150},
+        {"id": "03", "name": "Platelet Count", "price": 200},
+        {"id": "04", "name": "ESR", "price": 100},
+        {"id": "05", "name": "Hb%", "price": 100},
+        {"id": "06", "name": "Blood Grouping", "price": 150},
+        {"id": "07", "name": "Bleeding Time", "price": 100},
+        {"id": "08", "name": "Clotting Time", "price": 100},
+        {"id": "09", "name": "PBF", "price": 200},
+        {"id": "10", "name": "Reticulocyte Count", "price": 300},
+        {"id": "11", "name": "Malaria Parasite", "price": 200},
+        {"id": "12", "name": "Blood for MP (ICT)", "price": 400},
+        {"id": "13", "name": "MP (Antigen)", "price": 500}
+      ]
+    },
+    {
+      "category": "BIOCHEMISTRY",
+      "tests": [
+        {"id": "14", "name": "RBS", "price": 150},
+        {"id": "15", "name": "FBS", "price": 150},
+        {"id": "16", "name": "2HABF", "price": 150},
+        {"id": "17", "name": "GTT", "price": 500},
+        {"id": "18", "name": "S. Creatinine", "price": 300},
+        {"id": "19", "name": "Blood Urea", "price": 250},
+        {"id": "20", "name": "S. Uric Acid", "price": 300},
+        {"id": "21", "name": "S. Bilirubin", "price": 300},
+        {"id": "22", "name": "SGPT (ALT)", "price": 300},
+        {"id": "23", "name": "SGOT (AST)", "price": 300},
+        {"id": "24", "name": "S. Alkaline Phosphatase", "price": 350},
+        {"id": "25", "name": "S. Cholesterol", "price": 300},
+        {"id": "26", "name": "S. Triglyceride", "price": 350},
+        {"id": "27", "name": "HDL", "price": 350},
+        {"id": "28", "name": "LDL", "price": 350},
+        {"id": "29", "name": "Lipid Profile", "price": 1200},
+        {"id": "30", "name": "S. Calcium", "price": 350},
+        {"id": "31", "name": "S. Protein", "price": 400},
+        {"id": "32", "name": "S. Albumin", "price": 300},
+        {"id": "33", "name": "A:G Ratio", "price": 500},
+        {"id": "34", "name": "S. Electrolytes (Na, K, Cl)", "price": 900},
+        {"id": "35", "name": "S. Magnesium", "price": 500},
+        {"id": "36", "name": "S. Iron", "price": 500},
+        {"id": "37", "name": "TIBC", "price": 800},
+        {"id": "38", "name": "CPK", "price": 1000},
+        {"id": "39", "name": "CPK-MB", "price": 1000},
+        {"id": "40", "name": "LDH", "price": 800},
+        {"id": "41", "name": "Amylase", "price": 800},
+        {"id": "42", "name": "Lipase", "price": 1000},
+        {"id": "43", "name": "GGT", "price": 800}
+      ]
+    },
+    {
+      "category": "KIDNEY PROFILE",
+      "tests": [
+        {"id": "44", "name": "Kidney Profile (5 Tests)", "price": 1000}
+      ]
+    },
+    {
+      "category": "LIVER PROFILE",
+      "tests": [
+        {"id": "45", "name": "Liver Profile (8 Tests)", "price": 1500}
+      ]
+    },
+    {
+      "category": "DIABETIC PROFILE",
+      "tests": [
+        {"id": "46", "name": "Diabetic Profile (3 Tests)", "price": 600}
+      ]
+    },
+    {
+      "category": "THYROID PROFILE",
+      "tests": [
+        {"id": "47", "name": "Thyroid Profile (T3, T4, TSH)", "price": 1200}
+      ]
+    },
+    {
+      "category": "ELECTROLYTES - IONOGRAM",
+      "tests": [
+        {"id": "48", "name": "Electrolytes (Na, K, Cl)", "price": 900},
+        {"id": "49", "name": "Ionogram", "price": 1200}
+      ]
+    },
+    {
+      "category": "CARDIAC ENZYMES",
+      "tests": [
+        {"id": "50", "name": "Cardiac Enzymes", "price": 2500}
+      ]
+    },
+    {
+      "category": "LIPID PROFILE",
+      "tests": [
+        {"id": "51", "name": "Lipid Profile (5 Tests)", "price": 1200},
+        {"id": "52", "name": "Cholesterol / HDL / LDL / TG (4 Test)", "price": 1000},
+        {"id": "53", "name": "Cholesterol + Triglyceride", "price": 550}
+      ]
+    },
+    {
+      "category": "CARDIAC PROFILE",
+      "tests": [
+        {"id": "54", "name": "Cardiac Profile", "price": 3500}
+      ]
+    },
+    {
+      "category": "OTHER ENZYMES",
+      "tests": [
+        {"id": "55", "name": "Amylase", "price": 800},
+        {"id": "56", "name": "Lipase", "price": 1000},
+        {"id": "57", "name": "Acid Phosphatase", "price": 1000},
+        {"id": "58", "name": "Alk. Phosphatase", "price": 350}
+      ]
+    },
+    {
+      "category": "SEROLOGY",
+      "tests": [
+        {"id": "59", "name": "VDRL", "price": 200},
+        {"id": "60", "name": "TPHA", "price": 500},
+        {"id": "61", "name": "Widal Test", "price": 300},
+        {"id": "62", "name": "ASO Titre", "price": 500},
+        {"id": "63", "name": "CRP", "price": 500},
+        {"id": "64", "name": "RA Test", "price": 400},
+        {"id": "65", "name": "HBsAg", "price": 400},
+        {"id": "66", "name": "Anti HCV", "price": 800},
+        {"id": "67", "name": "Anti HBs", "price": 1000},
+        {"id": "68", "name": "Dengue NS1 Ag", "price": 1200},
+        {"id": "69", "name": "Dengue IgM & IgG", "price": 1500}
+      ]
+    },
+    {
+      "category": "MICROBIOLOGY",
+      "tests": [
+        {"id": "70", "name": "Blood C/S", "price": 1000},
+        {"id": "71", "name": "Urine C/S", "price": 800},
+        {"id": "72", "name": "Stool C/S", "price": 1000},
+        {"id": "73", "name": "Sputum C/S", "price": 1000},
+        {"id": "74", "name": "Pus C/S", "price": 1000},
+        {"id": "75", "name": "Wound Swab C/S", "price": 1000}
+      ]
+    },
+    {
+      "category": "SEMEN ANALYSIS",
+      "tests": [
+        {"id": "76", "name": "Semen Analysis", "price": 500},
+        {"id": "77", "name": "Semen R/E", "price": 300}
+      ]
+    },
+    {
+      "category": "URINE",
+      "tests": [
+        {"id": "78", "name": "Urine R/E", "price": 150},
+        {"id": "79", "name": "Urine for Pregnancy Test", "price": 200},
+        {"id": "80", "name": "Urine for Albumin", "price": 100},
+        {"id": "81", "name": "Urine for Sugar", "price": 50},
+        {"id": "82", "name": "24 Hours Urinary Protein", "price": 500},
+        {"id": "83", "name": "Urinary Creatinine Clearance Test", "price": 800}
+      ]
+    },
+    {
+      "category": "STOOL",
+      "tests": [
+        {"id": "84", "name": "Stool R/E", "price": 150},
+        {"id": "85", "name": "Occult Blood", "price": 200}
+      ]
+    },
+    {
+      "category": "SPECIAL PROCEDURE",
+      "tests": [
+        {"id": "86", "name": "Blood Grouping & X-Match", "price": 800},
+        {"id": "87", "name": "PT/INR", "price": 500},
+        {"id": "88", "name": "APTT", "price": 600},
+        {"id": "89", "name": "Bleeding Time / Clotting Time", "price": 200},
+        {"id": "90", "name": "D-Dimer", "price": 2000},
+        {"id": "91", "name": "FDP", "price": 2500},
+        {"id": "92", "name": "Fibrinogen", "price": 1500}
+      ]
+    },
+    {
+      "category": "HISTOPATHOLOGY",
+      "tests": [
+        {"id": "93", "name": "FNAC", "price": 1200},
+        {"id": "94", "name": "Biopsy (Small)", "price": 1500},
+        {"id": "95", "name": "Biopsy (Large)", "price": 2500},
+        {"id": "96", "name": "PAP Smear", "price": 1000}
+      ]
+    },
+    {
+      "category": "HORMONE",
+      "tests": [
+        {"id": "97", "name": "T3", "price": 400},
+        {"id": "98", "name": "T4", "price": 400},
+        {"id": "99", "name": "TSH", "price": 500},
+        {"id": "100", "name": "FT3", "price": 600},
+        {"id": "101", "name": "FT4", "price": 600},
+        {"id": "102", "name": "Testosterone", "price": 1000},
+        {"id": "103", "name": "Cortisol", "price": 1200},
+        {"id": "104", "name": "FSH", "price": 800},
+        {"id": "105", "name": "LH", "price": 800},
+        {"id": "106", "name": "Prolactin", "price": 800},
+        {"id": "107", "name": "Progesterone", "price": 1000},
+        {"id": "108", "name": "Estradiol", "price": 1000}
+      ]
+    },
+    {
+      "category": "TUMOR MARKER",
+      "tests": [
+        {"id": "109", "name": "PSA", "price": 1500},
+        {"id": "110", "name": "CEA", "price": 1500},
+        {"id": "111", "name": "CA 19-9", "price": 2000},
+        {"id": "112", "name": "CA 125", "price": 2000},
+        {"id": "113", "name": "AFP", "price": 1500}
+      ]
+    },
+    {
+      "category": "PREGNANCY MARKER",
+      "tests": [
+        {"id": "114", "name": "Pregnancy Test (Urine)", "price": 200},
+        {"id": "115", "name": "Beta HCG (Serum)", "price": 800}
+      ]
+    },
+    {
+      "category": "IMMUNOLOGY - RIA COMPLEX",
+      "tests": [
+        {"id": "116", "name": "HBsAg", "price": 400},
+        {"id": "117", "name": "Anti HCV", "price": 800},
+        {"id": "118", "name": "Anti HBs", "price": 1000},
+        {"id": "119", "name": "HIV 1 & 2", "price": 1000}
+      ]
+    },
+    {
+      "category": "HIV TEST",
+      "tests": [
+        {"id": "120", "name": "HIV Test", "price": 1000}
+      ]
+    },
+    {
+      "category": "HORMONES",
+      "tests": [
+        {"id": "121", "name": "T3", "price": 400},
+        {"id": "122", "name": "T4", "price": 400},
+        {"id": "123", "name": "TSH", "price": 500},
+        {"id": "124", "name": "FT3", "price": 600},
+        {"id": "125", "name": "FT4", "price": 600},
+        {"id": "126", "name": "Testosterone (Total/Free)", "price": 1000},
+        {"id": "127", "name": "Cortisol", "price": 1200},
+        {"id": "128", "name": "FSH", "price": 800},
+        {"id": "129", "name": "LH", "price": 800},
+        {"id": "130", "name": "Prolactin", "price": 800},
+        {"id": "131", "name": "Progesterone", "price": 1000},
+        {"id": "132", "name": "Estradiol", "price": 1000}
+      ]
+    },
+    {
+      "category": "IMMUNOASSAY",
+      "tests": [
+        {"id": "133", "name": "Anti TPO", "price": 1500},
+        {"id": "134", "name": "Anti Tg", "price": 1500},
+        {"id": "135", "name": "Insulin (Fasting)", "price": 1200},
+        {"id": "136", "name": "C-Peptide", "price": 1500},
+        {"id": "137", "name": "Vitamin D", "price": 2000},
+        {"id": "138", "name": "Vitamin B12", "price": 1500},
+        {"id": "139", "name": "Ferritin", "price": 1200},
+        {"id": "140", "name": "Folate", "price": 1500}
+      ]
+    },
+    {
+      "category": "SEROLOGY - INFECTIOUS DISEASE",
+      "tests": [
+        {"id": "141", "name": "HBV PCR (Quantitative)", "price": 5000},
+        {"id": "142", "name": "HCV PCR (Quantitative)", "price": 5000},
+        {"id": "143", "name": "HIV PCR (Viral Load)", "price": 8000},
+        {"id": "144", "name": "Anti HBc (Total)", "price": 800},
+        {"id": "145", "name": "Anti HBc IgM", "price": 1000},
+        {"id": "146", "name": "HBeAg", "price": 800},
+        {"id": "147", "name": "Anti HBe", "price": 800}
+      ]
+    },
+    {
+      "category": "TORCH PANEL",
+      "tests": [
+        {"id": "148", "name": "Toxoplasma IgG", "price": 1000},
+        {"id": "149", "name": "Toxoplasma IgM", "price": 1000},
+        {"id": "150", "name": "Rubella IgG", "price": 1000},
+        {"id": "151", "name": "Rubella IgM", "price": 1000},
+        {"id": "152", "name": "CMV IgG", "price": 1000},
+        {"id": "153", "name": "CMV IgM", "price": 1000},
+        {"id": "154", "name": "HSV 1 IgG", "price": 1000},
+        {"id": "155", "name": "HSV 1 IgM", "price": 1000},
+        {"id": "156", "name": "HSV 2 IgG", "price": 1000},
+        {"id": "157", "name": "HSV 2 IgM", "price": 1000}
+      ]
+    },
+    {
+      "category": "URINE TEST",
+      "tests": [
+        {"id": "158", "name": "Urine R/E", "price": 150},
+        {"id": "159", "name": "Urine for Pregnancy Test", "price": 200},
+        {"id": "160", "name": "UCG (Beta HCG)", "price": 800},
+        {"id": "161", "name": "Microalbumin (Urine)", "price": 600},
+        {"id": "162", "name": "Urine for Calcium", "price": 400},
+        {"id": "163", "name": "24 Hrs Urinary Protein", "price": 500}
+      ]
+    },
+    {
+      "category": "STOOL TEST",
+      "tests": [
+        {"id": "164", "name": "Stool R/E", "price": 150},
+        {"id": "165", "name": "Occult Blood", "price": 200},
+        {"id": "166", "name": "Stool for Reducing Substance", "price": 300}
+      ]
+    },
+    {
+      "category": "BLOOD PANEL",
+      "tests": [
+        {"id": "167", "name": "CBC", "price": 300},
+        {"id": "168", "name": "ESR", "price": 100},
+        {"id": "169", "name": "Blood Group & Rh", "price": 150},
+        {"id": "170", "name": "PBF", "price": 200}
+      ]
+    },
+    {
+      "category": "CARDIAC MARKERS",
+      "tests": [
+        {"id": "171", "name": "Troponin I", "price": 1500},
+        {"id": "172", "name": "CK-MB", "price": 1000},
+        {"id": "173", "name": "Myoglobin", "price": 1500},
+        {"id": "174", "name": "NT-pro BNP", "price": 3000},
+        {"id": "175", "name": "D-Dimer", "price": 2000}
+      ]
+    },
+    {
+      "category": "IMAGING - USG",
+      "tests": [
+        {"id": "176", "name": "USG of Whole Abdomen", "price": 1500},
+        {"id": "177", "name": "USG of Upper Abdomen", "price": 1200},
+        {"id": "178", "name": "USG of Lower Abdomen", "price": 1200},
+        {"id": "179", "name": "USG of KUB", "price": 1000},
+        {"id": "180", "name": "USG of Pelvis", "price": 1000},
+        {"id": "181", "name": "USG of Breast", "price": 1200},
+        {"id": "182", "name": "USG of Thyroid", "price": 800},
+        {"id": "183", "name": "USG of Scrotum", "price": 1000},
+        {"id": "184", "name": "Obstetric USG (Routine)", "price": 1000},
+        {"id": "185", "name": "USG for Follicular Study", "price": 600}
+      ]
+    },
+    {
+      "category": "IMAGING - X-RAY",
+      "tests": [
+        {"id": "186", "name": "X-Ray Chest PA View", "price": 400},
+        {"id": "187", "name": "X-Ray Chest (Both View)", "price": 600},
+        {"id": "188", "name": "X-Ray Abdomen", "price": 500},
+        {"id": "189", "name": "X-Ray KUB", "price": 500},
+        {"id": "190", "name": "X-Ray Skull", "price": 500},
+        {"id": "191", "name": "X-Ray PNS", "price": 400},
+        {"id": "192", "name": "X-Ray Spine", "price": 600}
+      ]
+    },
+    {
+      "category": "IMAGING - OTHERS",
+      "tests": [
+        {"id": "193", "name": "ECG", "price": 300},
+        {"id": "194", "name": "Echo", "price": 2000},
+        {"id": "195", "name": "ETT", "price": 2500},
+        {"id": "196", "name": "Holter Monitoring 24 Hr", "price": 3000},
+        {"id": "197", "name": "Ambulatory BP Monitoring 24 Hr", "price": 3000}
+      ]
+    },
+    {
+      "category": "PATHOLOGY SPECIAL",
+      "tests": [
+        {"id": "198", "name": "Color Doppler Study of Lower Limb", "price": 2500},
+        {"id": "199", "name": "Color Doppler Study of Neck Vessels", "price": 2500},
+        {"id": "200", "name": "Color Doppler Study of Abdomen", "price": 3000},
+        {"id": "201", "name": "Colour USG of Obstetrics", "price": 2000},
+        {"id": "202", "name": "2D Echo with Color Doppler", "price": 2500}
+      ]
+    },
+    {
+      "category": "IMAGING - MAMMOGRAPHY",
+      "tests": [
+        {"id": "203", "name": "Mammography (Both Breast)", "price": 2500},
+        {"id": "204", "name": "Mammography (Single Breast)", "price": 1500}
+      ]
+    },
+    {
+      "category": "ENDOSCOPY",
+      "tests": [
+        {"id": "204", "name": "Upper GI Endoscopy", "price": 3500},
+        {"id": "205", "name": "Colonoscopy", "price": 5000},
+        {"id": "206", "name": "Sigmoidoscopy", "price": 3000},
+        {"id": "207", "name": "Biopsy (During Endoscopy)", "price": 2000}
+      ]
+    },
+    {
+      "category": "RADIOLOGY - CT SCAN",
+      "tests": [
+        {"id": "208", "name": "CT Scan of Brain", "price": 3500},
+        {"id": "209", "name": "CT Scan of Chest", "price": 4000},
+        {"id": "210", "name": "CT Scan of Abdomen", "price": 4500},
+        {"id": "211", "name": "CT Scan of Whole Abdomen", "price": 5000},
+        {"id": "212", "name": "CT Scan of Pelvis", "price": 4000},
+        {"id": "213", "name": "CT Scan of Spine", "price": 4500}
+      ]
+    },
+    {
+      "category": "RADIOLOGY - MRI",
+      "tests": [
+        {"id": "214", "name": "MRI of Brain", "price": 6000},
+        {"id": "215", "name": "MRI of Spine", "price": 6500},
+        {"id": "216", "name": "MRI of Abdomen", "price": 7000},
+        {"id": "217", "name": "MRI of Pelvis", "price": 7000},
+        {"id": "218", "name": "MRI of Knee Joint", "price": 6000},
+        {"id": "219", "name": "MRI of Shoulder Joint", "price": 6000},
+        {"id": "220", "name": "MRCP", "price": 8000}
+      ]
+    },
+    {
+      "category": "RADIOLOGY - SPECIAL",
+      "tests": [
+        {"id": "221", "name": "IVU", "price": 3000},
+        {"id": "222", "name": "Barium Meal Follow Through", "price": 3500},
+        {"id": "223", "name": "Barium Enema", "price": 3500},
+        {"id": "224", "name": "HSG", "price": 3000},
+        {"id": "225", "name": "MCU", "price": 3000}
+      ]
+    },
+    {
+      "category": "PACKAGE - HEALTH CHECKUP",
+      "tests": [
+        {"id": "226", "name": "Basic Health Checkup", "price": 2500},
+        {"id": "227", "name": "Executive Health Checkup", "price": 5000},
+        {"id": "228", "name": "Premium Health Checkup", "price": 10000},
+        {"id": "229", "name": "Diabetic Package", "price": 3000},
+        {"id": "230", "name": "Cardiac Package", "price": 5000},
+        {"id": "231", "name": "Thyroid Package", "price": 1500},
+        {"id": "232", "name": "Antenatal Package", "price": 4000}
+      ]
+    },
+    {
+      "category": "MICROBIOLOGY - CULTURE",
+      "tests": [
+        {"id": "233", "name": "Blood C/S", "price": 1000},
+        {"id": "234", "name": "Urine C/S", "price": 800},
+        {"id": "235", "name": "Stool C/S", "price": 1000},
+        {"id": "236", "name": "Sputum C/S", "price": 1000},
+        {"id": "237", "name": "Pus C/S", "price": 1000},
+        {"id": "238", "name": "Throat Swab C/S", "price": 800},
+        {"id": "239", "name": "HVS C/S", "price": 800}
+      ]
+    },
+    {
+      "category": "COAGULATION",
+      "tests": [
+        {"id": "240", "name": "PT/INR", "price": 500},
+        {"id": "241", "name": "APTT", "price": 600},
+        {"id": "242", "name": "BT/CT", "price": 200},
+        {"id": "243", "name": "D-Dimer", "price": 2000}
+      ]
+    }
+  ]
+}

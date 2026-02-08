@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 from .models import Doctor, Favorite, Review, TimeSlot, Appointment, Category, CategoryKeyword, DoctorView, SearchQuery, DailyStats, EmergencySchedule, DoctorLeave
 
 
@@ -20,9 +21,9 @@ class DoctorLeaveInline(admin.TabularInline):
 
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
-    list_display = ['name', 'specialty_short', 'hospital', 'get_category', 'get_categories_list', 'is_emergency_available', 'is_24_7_available', 'available_now_status', 'view_count', 'is_active', 'created_at']
+    list_display = ['name', 'name_en', 'specialty_short', 'hospital', 'get_category', 'get_categories_list', 'is_emergency_available', 'is_24_7_available', 'available_now_status', 'view_count', 'is_active', 'created_at']
     list_filter = ['is_active', 'is_emergency_available', 'is_24_7_available', 'hospital', 'created_at', 'categories', 'primary_category']
-    search_fields = ['name', 'specialty', 'hospital', 'qualification', 'contact', 'hospital_address', 'emergency_phone']
+    search_fields = ['name', 'name_en', 'specialty', 'specialty_en', 'hospital', 'hospital_en', 'qualification', 'contact', 'hospital_address', 'emergency_phone']
     list_editable = ['is_active', 'is_emergency_available', 'is_24_7_available']
     date_hierarchy = 'created_at'
     ordering = ['-is_emergency_available', '-is_24_7_available', '-view_count', 'hospital', '-created_at']
@@ -31,24 +32,29 @@ class DoctorAdmin(admin.ModelAdmin):
     inlines = [EmergencyScheduleInline, DoctorLeaveInline]
     
     fieldsets = (
-        ('মূল তথ্য', {
+        (_('বাংলা তথ্য / Bangla Information'), {
             'fields': ('name', 'qualification', 'specialty', 'image')
         }),
-        ('হাসপাতাল তথ্য', {
-            'fields': ('hospital', 'hospital_address')
+        (_('ইংরেজি তথ্য / English Information'), {
+            'fields': ('name_en', 'qualification_en', 'specialty_en'),
+            'classes': ('collapse',),
+            'description': 'ইংরেজি ভাষার জন্য তথ্য (ঐচ্ছিক)'
         }),
-        ('ক্যাটেগরি', {
+        (_('হাসপাতাল তথ্য / Hospital Information'), {
+            'fields': (('hospital', 'hospital_en'), ('hospital_address', 'hospital_address_en'))
+        }),
+        (_('ক্যাটেগরি / Categories'), {
             'fields': ('categories', 'primary_category')
         }),
-        ('যোগাযোগ তথ্য', {
-            'fields': ('contact', 'schedule')
+        (_('যোগাযোগ তথ্য / Contact Information'), {
+            'fields': (('contact', 'schedule'), 'schedule_en')
         }),
-        ('জরুরি সেবা', {
-            'fields': ('is_emergency_available', 'is_24_7_available', 'emergency_phone', 'emergency_note', 'last_emergency_update'),
+        (_('জরুরি সেবা / Emergency Services'), {
+            'fields': ('is_emergency_available', 'is_24_7_available', 'emergency_phone', ('emergency_note', 'emergency_note_en'), 'last_emergency_update'),
             'classes': ('collapse',),
             'description': 'জরুরি চিকিৎসা সেবার জন্য এই তথ্য ব্যবহার করা হবে'
         }),
-        ('অবস্থা', {
+        (_('অবস্থা / Status'), {
             'fields': ('is_active',)
         }),
     )
@@ -201,7 +207,7 @@ class CategoryKeywordInline(admin.TabularInline):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'name_english', 'slug', 'icon', 'color', 'order', 'is_active', 'get_doctor_count', 'created_at']
     list_filter = ['is_active', 'created_at']
-    search_fields = ['name', 'name_english', 'description']
+    search_fields = ['name', 'name_english', 'description', 'description_en']
     list_editable = ['order', 'is_active', 'color']
     prepopulated_fields = {'slug': ('name',)}
     ordering = ['order', 'name']
@@ -209,19 +215,21 @@ class CategoryAdmin(admin.ModelAdmin):
     inlines = [CategoryKeywordInline]
     
     fieldsets = (
-        ('মূল তথ্য', {
-            'fields': ('name', 'name_english', 'slug')
+        (_('বাংলা তথ্য / Bangla Information'), {
+            'fields': ('name', 'slug', 'description')
         }),
-        ('বিবরণ', {
-            'fields': ('description',)
+        (_('ইংরেজি তথ্য / English Information'), {
+            'fields': ('name_english', 'description_en'),
+            'classes': ('collapse',),
+            'description': 'ইংরেজি ভাষার জন্য তথ্য (ঐচ্ছিক)'
         }),
-        ('স্টাইল', {
+        (_('স্টাইল / Style'), {
             'fields': ('icon', 'color')
         }),
-        ('সেটিংস', {
+        (_('সেটিংস / Settings'), {
             'fields': ('order', 'is_active')
         }),
-        ('সময়', {
+        (_('সময় / Timestamp'), {
             'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
         }),

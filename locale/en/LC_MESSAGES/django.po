@@ -1,0 +1,173 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tangail Doctors\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-07 15:30+0600\n"
+"PO-Revision-Date: 2026-02-07 15:30+0600\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Header and Title
+msgid "টাঙ্গাইল ডাক্তার তালিকা"
+msgstr "Tangail Doctors List"
+
+msgid "টাঙ্গাইল জেলার সকল ডাক্তারদের তথ্য এক জায়গায়"
+msgstr "All doctors information of Tangail district in one place"
+
+# View Types
+msgid "কার্ড ভিউ"
+msgstr "Card View"
+
+msgid "টেবিল ভিউ"
+msgstr "Table View"
+
+msgid "জরুরি ডাক্তার"
+msgstr "Emergency Doctors"
+
+msgid "হাসপাতাল"
+msgstr "Hospitals"
+
+# Authentication
+msgid "আমার এপয়েন্টমেন্ট"
+msgstr "My Appointments"
+
+msgid "লগআউট"
+msgstr "Logout"
+
+msgid "লগইন"
+msgstr "Login"
+
+msgid "রেজিস্টার"
+msgstr "Register"
+
+# Search
+msgid "ডাক্তারের নাম, বিশেষত্ব, হাসপাতাল সার্চ করুন..."
+msgstr "Search doctor name, specialty, hospital..."
+
+msgid "সার্চ করুন"
+msgstr "Search"
+
+# Category
+msgid "ক্যাটেগরি"
+msgstr "Category"
+
+msgid "সব"
+msgstr "All"
+
+# Doctor Information Labels
+msgid "শিক্ষাগত যোগ্যতা"
+msgstr "Educational Qualification"
+
+msgid "বিশেষত্ব"
+msgstr "Specialty"
+
+msgid "সময়সূচী"
+msgstr "Schedule"
+
+msgid "যোগাযোগ"
+msgstr "Contact"
+
+msgid "বিস্তারিত"
+msgstr "Details"
+
+# Emergency Section
+msgid "জরুরি ডাক্তার - এখনই পাওয়া যাবে"
+msgstr "Emergency Doctors - Available Now"
+
+msgid "সব জরুরি ডাক্তার দেখুন"
+msgstr "View All Emergency Doctors"
+
+msgid "জরুরি"
+msgstr "Emergency"
+
+msgid "২৪/৭"
+msgstr "24/7"
+
+msgid "জরুরি সেবা"
+msgstr "Emergency Service"
+
+msgid "২৪/৭ উপলব্ধ"
+msgstr "24/7 Available"
+
+msgid "এখন উপলব্ধ"
+msgstr "Available Now"
+
+# Messages
+msgid "কোনো ডাক্তার খুঁজে পাওয়া যায়নি।"
+msgstr "No doctors found."
+
+# Pagination
+msgid "ডাক্তার পেজিনেশন"
+msgstr "Doctor Pagination"
+
+msgid "আগের"
+msgstr "Previous"
+
+msgid "পরের"
+msgstr "Next"
+
+# Footer
+msgid "টাঙ্গাইল ডাক্তার তালিকা। সকল স্বত্ব সংরক্ষিত।"
+msgstr "Tangail Doctors List. All rights reserved."
+
+msgid "মোট ডাক্তার"
+msgstr "Total Doctors"
+
+# Language Names
+msgid "বাংলা"
+msgstr "Bangla"
+
+msgid "English"
+msgstr "English"
+
+# Detail page
+msgid "ফিরে যান"
+msgstr "Go Back"
+
+msgid "এডিট করুন"
+msgstr "Edit"
+
+msgid "জরুরি সেবা উপলব্ধ"
+msgstr "Emergency Service Available"
+
+msgid "জরুরি যোগাযোগ"
+msgstr "Emergency Contact"
+
+# Emergency page
+msgid "২৪ ঘণ্টা সেবা - এখনই পাওয়া যাবে"
+msgstr "24 Hour Service - Available Now"
+
+msgid "ডাক্তার খুঁজুন..."
+msgstr "Search doctor..."
+
+msgid "খুঁজুন"
+msgstr "Search"
+
+msgid "সব জরুরি"
+msgstr "All Emergency"
+
+msgid "জরুরি প্রয়োজনে"
+msgstr "In Emergency"
+
+msgid "ডাক্তারের নাম ক্লিক করে বিস্তারিত দেখুন"
+msgstr "Click on doctor's name to see details"
+
+msgid "\"এখনই কল করুন\" বাটনে ক্লিক করে সরাসরি ফোন করুন"
+msgstr "Click \"Call Now\" button to call directly"
+
+msgid "WhatsApp এর মাধ্যমেও যোগাযোগ করতে পারবেন"
+msgstr "You can also contact via WhatsApp"
+
+msgid "জীবনের ঝুঁকি থাকলে অবশ্যই 999 এ কল করে অ্যাম্বুলেন্স ডাকুন"
+msgstr "If life is at risk, call 999 for ambulance"
+
