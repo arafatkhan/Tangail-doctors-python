@@ -1,0 +1,193 @@
+###############################################################################
+# MANUAL DEPLOYMENT GUIDE - Follow These Steps Exactly
+# Copy-paste these commands one by one in your terminal
+###############################################################################
+
+# ===========================================================================
+# STEP 1: SSH TO VPS (Manual - Password Required)
+# ===========================================================================
+
+# Run this command in your PowerShell terminal:
+ssh root@217.216.73.118
+
+# When prompted for password, type (you won't see characters):
+CVqqcd6uEHM4vdMV
+
+# Press Enter
+# You should now be connected to VPS and see: root@vmi#######:~#
+
+
+# ===========================================================================
+# STEP 2: DOWNLOAD SCRIPTS FROM GITHUB (Once SSH connected)
+# ===========================================================================
+
+cd /root
+git clone https://github.com/arafatkhan/Tangail-doctors-python.git temp-repo
+cp -r temp-repo/deployment-scripts /root/
+rm -rf temp-repo
+chmod +x /root/deployment-scripts/*.sh
+ls -la /root/deployment-scripts/
+
+
+# ===========================================================================
+# STEP 3: RUN DEPLOYMENT SCRIPTS (One by one)
+# ===========================================================================
+
+cd /root/deployment-scripts
+
+# Script 1: Server Setup (15-20 minutes)
+./01-server-setup.sh
+
+# Wait for completion, then run:
+
+# Script 2: Database Setup (1 minute) - SAVE THE PASSWORD IT SHOWS!
+./02-database-setup.sh
+
+# IMPORTANT: Copy and save the database password displayed!
+# It will be saved in: /root/database-credentials.txt
+
+# Script 3: Django Deployment (10 minutes)
+./03-deploy-django.sh
+
+# When asked for GitHub repo, press Enter for default OR provide your repo URL
+# When asked to create superuser:
+#   Type: y
+#   Username: admin
+#   Email: your-email@example.com
+#   Password: (choose a secure password)
+
+# Script 4: Gunicorn Setup (2 minutes)
+./04-setup-gunicorn.sh
+
+# Script 5: Nginx Setup (2 minutes)
+./05-setup-nginx.sh
+
+# ===========================================================================
+# STEP 4: TEST WEBSITE ON IP ADDRESS
+# ===========================================================================
+
+# On your Windows machine browser, open:
+http://217.216.73.118
+
+# You should see your Django website!
+
+
+# ===========================================================================
+# STEP 5: CONFIGURE DNS (Do this on your Windows machine)
+# ===========================================================================
+
+# 1. Open browser: https://dash.cloudflare.com/
+# 2. Login to Cloudflare
+# 3. Click on: tangaildoctors.com
+# 4. Go to: DNS > Records
+# 
+# 5. Update A record "@":
+#    - Type: A
+#    - Name: @
+#    - IPv4 address: 217.216.73.118
+#    - Proxy status: DNS only (gray cloud)
+#    - Click Save
+#
+# 6. Update/Create A record "www":
+#    - Type: A
+#    - Name: www
+#    - IPv4 address: 217.216.73.118
+#    - Proxy status: DNS only (gray cloud)
+#    - Click Save
+#
+# 7. Wait 5-30 minutes for DNS propagation
+#
+# 8. Test on Windows PowerShell:
+nslookup tangaildoctors.com
+# Should show: 217.216.73.118
+
+
+# ===========================================================================
+# STEP 6: INSTALL SSL CERTIFICATE (After DNS is working)
+# ===========================================================================
+
+# First verify domain works:
+curl http://tangaildoctors.com
+
+# If it shows your website, install SSL:
+cd /root/deployment-scripts
+./06-install-ssl.sh
+
+# When prompted:
+#   - DNS ready? Type: y
+#   - Email: your-email@example.com
+
+# Wait for completion
+
+
+# ===========================================================================
+# STEP 7: FINAL VERIFICATION
+# ===========================================================================
+
+# Check all services:
+systemctl status postgresql nginx gunicorn
+
+# Test HTTPS:
+curl https://tangaildoctors.com
+
+# On browser test:
+https://tangaildoctors.com
+https://www.tangaildoctors.com
+https://tangaildoctors.com/admin/
+
+
+# ===========================================================================
+# USEFUL COMMANDS FOR LATER
+# ===========================================================================
+
+# View logs if there's an error:
+tail -f /var/log/gunicorn/error.log
+tail -f /var/log/nginx/tangail-doctors-error.log
+
+# Restart services:
+systemctl restart gunicorn nginx
+
+# Re-deploy after code changes:
+cd /root/deployment-scripts
+./07-upload-and-deploy.sh
+
+# View database credentials:
+cat /root/database-credentials.txt
+
+# Access Django shell:
+cd /var/www/tangail-doctors
+source venv/bin/activate
+python manage.py shell
+
+# Create superuser later if needed:
+cd /var/www/tangail-doctors
+source venv/bin/activate
+python manage.py createsuperuser
+
+
+# ===========================================================================
+# TROUBLESHOOTING
+# ===========================================================================
+
+# If Gunicorn fails:
+journalctl -u gunicorn -n 50
+
+# If Nginx shows 502 error:
+systemctl restart gunicorn nginx
+
+# Check if services are running:
+systemctl status postgresql
+systemctl status nginx
+systemctl status gunicorn
+
+# Test Gunicorn socket:
+curl --unix-socket /run/gunicorn.sock http
+
+# ===========================================================================
+# END OF GUIDE
+# ===========================================================================
+
+# Total estimated time: 4-6 hours
+# Most time is waiting for installations and DNS propagation
+
+# Good luck! 🚀
