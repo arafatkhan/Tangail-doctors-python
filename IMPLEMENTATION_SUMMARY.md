@@ -19,11 +19,11 @@
   - Contact details
 
 ### 3. Superuser Creation ✅
-- **Username**: arafat
-- **Password**: arafat18843
+- **Username**: (Set via environment or default)
 - **Email**: arafat@example.com
 - **Status**: Active superuser with admin access
 - Authentication tested and verified
+- **Note**: Change default credentials immediately in production!
 
 ### 4. Database Cleanup ✅
 - Removed all `<br>` tags from doctor data fields
@@ -88,9 +88,9 @@
 To access the Django admin panel:
 1. Run the development server: `python manage.py runserver`
 2. Navigate to: `http://localhost:8000/admin/`
-3. Login with:
-   - Username: `arafat`
-   - Password: `arafat18843`
+3. Login with your superuser credentials (created during setup)
+
+**Security Note**: Default credentials are for initial setup only. Change them immediately in production environments!
 
 ## Notes
 

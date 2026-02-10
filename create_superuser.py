@@ -1,5 +1,9 @@
 #!/usr/bin/env python
-"""Script to create a superuser for Django admin"""
+"""
+Script to create a superuser for Django admin.
+NOTE: This script is for DEVELOPMENT/SETUP ONLY. 
+In production, use Django's built-in createsuperuser command or environment variables.
+"""
 import os
 import django
 
@@ -10,9 +14,10 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-username = 'arafat'
-email = 'arafat@example.com'
-password = 'arafat18843'
+# WARNING: These credentials are for initial setup only. Change them immediately!
+username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'arafat')
+email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'arafat@example.com')
+password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'arafat18843')
 
 # Check if user already exists
 if User.objects.filter(username=username).exists():
